@@ -1,7 +1,7 @@
 # sistema-imoveis-basico
 Trabalho da disciplina de Banco de Dados II
 
-### Integrantes:
+### :writing_hand: Integrantes:
 
 - Arthur de Mello Vieira
 - João Victor Miotelli Vitali
