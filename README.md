@@ -12,3 +12,4 @@ Trabalho da disciplina de Banco de Dados II
 - Nicolas Loffi Kaminski
 - Vinícius Pedroso Milanez
 
+ 
