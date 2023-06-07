@@ -32,6 +32,21 @@ Front em React.
 
 Relatório de imóveis locados por região;
 Relatório de pagamento por locatário;
+Qntde de imoveis locados por lpcsatario;
+Valor dos imoveis locados;
+Locatarios inadimplentes;
+Valor inadimplentes;
+Ranking de imobiliarias:  imoveis locados, dividas
+
+Param data_inicio e data_fim - relacionadas ao pagamento/vencimentos
+
+nome_imobiliária;
+qtde_imoveis_licados
+Valor_total_locacao
+Qtde_imoveis_locacao_aberto
+Valor_total_locacao_aberto
+
+Trazer o valor total da divida.
 
 ## Telas
 
@@ -55,9 +70,13 @@ Nessa tela o locatário pode cadastrar sua casa há uma imobiliária, para que p
 
 **Dados da tabela:**
 
-### Get de contratos
+### Cadastro de contrato
 
-Descreve todos os contratos do sistema, pode ser filtrado com base nos campos da tabela.
+Descreve o contrato de imóvel, pode ser filtrado com base nos campos da tabela.
+
+Deve ser possível atualizar os valores do contrato.
+
+Deve ser possível deletar o contrato, para retificação ou encerramento - Validar chave da tabela de pagamento para não deixar a exclusão.
 
 ### Tela de escolha de relatório
 
@@ -69,3 +88,6 @@ Relatório de imóveis locados por região e pagamentos por locatário.
 
 Consulta de dados de contrato;
 Consulta de dados do locador e locatário;
+
+
+Tabela de corretor ->
