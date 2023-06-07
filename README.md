@@ -18,28 +18,28 @@ Links:
 
 Modelo físico: https://dbdiagram.io/d/647fb5d3722eb7749483ccbc
 
-### Descrição
+## Descrição
 
 A aplicação é um sistema de locação de imoveis (Sas) para locadoras. 
 
-### Arquitetura
+## Arquitetura
 
 Backend (APIs) em python;
 Banco Sqlite;
 Front em React.
 
-### Relatórios
+## Relatórios
 
 Relatório de imóveis locados por região;
 Relatório de pagamento por locatário;
 
-### Telas
+## Telas
 
-#### Cadastro de imóveis
+### Cadastro de imóveis
 
 A imobiliária pode cadastrar imóveis de locatários no sistema, para fazer anúncios.
 
-#### Cadastro de pessoas
+### Cadastro de pessoas
 
 A Imobiliária deve poder cadastrar as pessoas que serão dispostas no sistema. A especialização de locador e locatário serão feitas pelo contrato.
 
@@ -49,17 +49,17 @@ A Imobiliária deve poder cadastrar as pessoas que serão dispostas no sistema. 
 - data_nascimento
 - email
 
-#### Cadastro de anúncios 
+### Cadastro de anúncios 
 
 Nessa tela o locatário pode cadastrar sua casa há uma imobiliária, para que possa ser anunciada para aluguel.
 
 **Dados da tabela:**
 
-#### Get de contratos
+### Get de contratos
 
 Descreve todos os contratos do sistema, pode ser filtrado com base nos campos da tabela.
 
-#### Tela de escolha de relatório
+### Tela de escolha de relatório
 
 Deve ser possível escolher qual relatório emitir entre os 3 dois disponíveis.
 
