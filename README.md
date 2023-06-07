@@ -35,14 +35,6 @@ Relatório de pagamento por locatário;
 
 ### Telas
 
-#### Cadastro de pessoa
-
-**campos:** 
-- nome_pessoa
-- telefone
-- data_nascimento
-- email
-
 #### Cadastro de imóveis
 
 A imobiliária pode cadastrar imóveis de locatários no sistema, para fazer anúncios.
@@ -50,6 +42,12 @@ A imobiliária pode cadastrar imóveis de locatários no sistema, para fazer an�
 #### Cadastro de pessoas
 
 A Imobiliária deve poder cadastrar as pessoas que serão dispostas no sistema. A especialização de locador e locatário serão feitas pelo contrato.
+
+**campos:** 
+- nome_pessoa
+- telefone
+- data_nascimento
+- email
 
 #### Cadastro de anúncios 
 
