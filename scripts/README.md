@@ -1,0 +1,1 @@
+Aqui sera a pasta para os scripts do projeto.
