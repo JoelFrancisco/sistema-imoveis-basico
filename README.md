@@ -4,14 +4,14 @@ Trabalho da disciplina de Banco de Dados II
 
 ### :writing_hand: Integrantes:
 
-- Arthur de Mello Vieira - Git: Arthur689347350
-- João Victor Miotelli Vitali - Git: JoaoMiotelli
-- Joel Francisco da Silva Filho - Git: JoelFrancisco 
-- Lucas de Castro Zanoni (brabo) - Git: Castrozan
-- Lucas de Oliveira Alano - Git: LucasAlano
-- Lucas Sernajoto Vanzeler Paixão - Git: Lucaspaixao-code
-- Nicolas Loffi Kaminski - Git: NicolasLK
-- Vinícius Pedroso Milanez - Git: viniciusmilanez
+- Arthur de Mello Vieira - [Arthur689347350](https://github.com/Arthur689347350)
+- João Victor Miotelli Vitali - [JoaoMiotelli](https://github.com/JoaoMiotelli)
+- Joel Francisco da Silva Filho - [JoelFrancisco](https://github.com/JoelFrancisco)
+- Lucas de Castro Zanoni (brabo) - [Castrozan](https://github.com/Castrozan)
+- Lucas de Oliveira Alano - [LucasAlano](https://github.com/LucasAlano)
+- Lucas Sernajoto Vanzeler Paixão - [Lucaspaixao-code](https://github.com/Lucaspaixao-code)
+- Nicolas Loffi Kaminski - [NicolasLK](https://github.com/NicolasLK)
+- Vinícius Pedroso Milanez - [viniciusmilanez](https://github.com/viniciusmilanez)
 
 ## Regras Sistema
 
