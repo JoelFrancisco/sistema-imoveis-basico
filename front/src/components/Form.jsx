@@ -21,8 +21,9 @@ export function Form() {
       display="flex"
       flexDirection="column"
       gap="4"
-      border="1px"
-      borderColor="black"
+      borderRadius="8"
+      borderStyle=""
+      boxShadow="dark-lg"
     >
       <Text>Informe os dados do locador:</Text>
       <Stack
