@@ -42,15 +42,15 @@ Qntde de imoveis locados por lpcsatario;
 3 - Valor inadimplentes;
 
 ##### Principal
-1 - Ranking de imobiliarias:  imoveis locados, dividas
+1 - Ranking de imobiliarias:  imoveis locados e por dividas
 
 Param data_inicio e data_fim - relacionadas ao pagamento/vencimentos
 
 nome_imobiliária;
-qtde_imoveis_licados
-Valor_total_locacao
-Qtde_imoveis_locacao_aberto
-Valor_total_locacao_aberto
+qtde_imoveis_licados;
+Valor_total_locacao;
+Qtde_imoveis_locacao_aberto;
+Valor_total_locacao_aberto.
 
 Trazer o valor total da divida.
 
