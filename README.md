@@ -34,10 +34,15 @@ Front em React.
 Relatório de imóveis locados por região;
 Relatório de pagamento por locatário;
 Qntde de imoveis locados por lpcsatario;
-Valor dos imoveis locados;
-Locatarios inadimplentes;
-Valor inadimplentes;
-Ranking de imobiliarias:  imoveis locados, dividas
+
+#### Outros relatórios possíveis
+
+1 - Valor dos imoveis locados;
+2 - Locatarios inadimplentes;
+3 - Valor inadimplentes;
+
+##### Principal
+1 - Ranking de imobiliarias:  imoveis locados, dividas
 
 Param data_inicio e data_fim - relacionadas ao pagamento/vencimentos
 
