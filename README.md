@@ -21,7 +21,7 @@ Modelo físico: https://dbdiagram.io/d/647fb5d3722eb7749483ccbc
 
 ## Descrição
 
-A aplicação é um sistema de locação de imoveis (Sas) para locadoras. 
+A aplicação é um sistema de locação de imoveis (Saas) para locadoras. 
 
 ## Arquitetura
 
