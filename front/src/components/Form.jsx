@@ -39,6 +39,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel textAlign="center">Nome:</FormLabel>
           <Input
+            id="locator_name"
             type="text"
             size="md"
             variant="filled"
@@ -51,6 +52,7 @@ export function Form() {
           <InputGroup>
             <InputLeftAddon children="(48)" />
             <Input
+              id="locator_phone"
               type="tel"
               size="md"
               variant="outline"
@@ -62,6 +64,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Data de nascimento:</FormLabel>
           <Input
+            id="locator_birth"
             type="date"
             size="md"
             variant="filled"
@@ -72,6 +75,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>CPF:</FormLabel>
           <Input
+            id="locator_cpf"
             type="text"
             size="md"
             variant="filled"
@@ -95,6 +99,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel textAlign="center">Nome:</FormLabel>
           <Input
+            id="renter_name"
             type="text"
             size="md"
             variant="filled"
@@ -107,6 +112,7 @@ export function Form() {
           <InputGroup>
             <InputLeftAddon children="(48)" />
             <Input
+              id="renter_phone"
               type="tel"
               size="md"
               variant="outline"
@@ -118,6 +124,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Data de nascimento:</FormLabel>
           <Input
+            id="renter_birth"
             type="date"
             size="md"
             variant="filled"
@@ -128,6 +135,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>CPF:</FormLabel>
           <Input
+            id="renter_cpf"
             type="text"
             size="md"
             variant="filled"
@@ -138,6 +146,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Banco:</FormLabel>
           <Input
+            id="renter_bank"
             type="text"
             size="md"
             variant="filled"
@@ -148,6 +157,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Conta:</FormLabel>
           <Input
+            id="renter_account"
             type="text"
             size="md"
             variant="filled"
@@ -158,6 +168,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Agencia:</FormLabel>
           <Input
+            id="renter_agency"
             type="text"
             size="md"
             variant="filled"
@@ -181,6 +192,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Tipo:</FormLabel>
           <Select
+            id="set_type"
             type="date"
             size="md"
             variant="filled"
@@ -195,6 +207,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Bloco:</FormLabel>
           <Input
+            id="set_block"
             type="text"
             size="md"
             variant="filled"
@@ -205,6 +218,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Nº:</FormLabel>
           <Input
+            id="set_number"
             type="number"
             size="md"
             variant="filled"
@@ -215,6 +229,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Area total(m²):</FormLabel>
           <Input
+            id="set_area_total"
             type="number"
             size="md"
             variant="filled"
@@ -225,6 +240,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Area construida(m²):</FormLabel>
           <Input
+            id="set_area_building"
             type="number"
             size="md"
             variant="filled"
@@ -235,6 +251,7 @@ export function Form() {
         <Flex alignItems="center">
           <FormLabel>Valor total(R$):</FormLabel>
           <Input
+            id="set_value_total"
             type="number"
             size="md"
             variant="filled"
