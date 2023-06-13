@@ -16,7 +16,7 @@ export default function Contracts() {
     <Flex as="main" padding="8" alignItems="center" justifyContent="center">
       <TableContainer bgColor="pink">
         <Table variant="simple" size="md">
-          <TableCaption>Imperial to metric conversion factors</TableCaption>
+          <TableCaption>Contratos - Ativos e Inativos</TableCaption>
           <Thead>
             <Tr>
               <Th>sts contrato</Th>
@@ -31,26 +31,46 @@ export default function Contracts() {
           </Thead>
           <Tbody>
             <Tr>
-              <Td>inches</Td>
-              <Td>millimetres (mm)</Td>
-              <Td isNumeric>25.4</Td>
+              <Td>ativo</Td>
+              <Td>Lucas Zanoni</Td>
+              <Td>555.888.484-99</Td>
+              <Td>Nicolas Loffi Kaminski</Td>
+              <Td>555.888.484-99</Td>
+              <Td>Apto. 102, Bl. 03</Td>
+              <Td>12/04/2022 - 02/07/2023</Td>
+              <Td>R$ 232,20</Td>
             </Tr>
             <Tr>
-              <Td>feet</Td>
-              <Td>centimetres (cm)</Td>
-              <Td isNumeric>30.48</Td>
+              <Td>ativo</Td>
+              <Td>Lucas Zanoni</Td>
+              <Td>555.888.484-99</Td>
+              <Td>Nicolas Loffi Kaminski</Td>
+              <Td>555.888.484-99</Td>
+              <Td>Apto. 508</Td>
+              <Td>12/04/2022 - 02/07/2023</Td>
+              <Td>R$ 232,20</Td>
             </Tr>
             <Tr>
-              <Td>yards</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td>
+              <Td>ativo</Td>
+              <Td>Lucas Zanoni</Td>
+              <Td>555.888.484-99</Td>
+              <Td>Nicolas Loffi Kaminski</Td>
+              <Td>555.888.484-99</Td>
+              <Td>Nº 64</Td>
+              <Td>12/04/2022 - 02/07/2023</Td>
+              <Td>R$ 232,20</Td>
             </Tr>
           </Tbody>
           <Tfoot>
             <Tr>
-              <Th>Status Contrato</Th>
-              <Th>into</Th>
-              <Th isNumeric>multiply by</Th>
+              <Th>sts contrato</Th>
+              <Th>nome locador</Th>
+              <Th>dados locador</Th>
+              <Th>nome locatario</Th>
+              <Th>dados locatario</Th>
+              <Th>dados imovel</Th>
+              <Th>inicio/fim</Th>
+              <Th>valor R$</Th>
             </Tr>
           </Tfoot>
         </Table>
