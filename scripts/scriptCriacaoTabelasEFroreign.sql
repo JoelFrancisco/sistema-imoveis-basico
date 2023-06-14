@@ -94,7 +94,7 @@ CREATE TABLE [Pais] (
 )
 GO
 
-ALTER TABLE [Imovel] ADD FOREIGN KEY ([cd_imovel]) REFERENCES [Pessoa] ([cd_pessoa])
+ALTER TABLE [Pessoa] ADD FOREIGN KEY ([cd_imovel]) REFERENCES [Pessoa] ([cd_pessoa])
 GO
 
 ALTER TABLE [Dados_bancarios] ADD FOREIGN KEY ([cd_dadosbancarios]) REFERENCES [Pessoa] ([cd_pessoa])
