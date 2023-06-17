@@ -4,14 +4,14 @@ Trabalho da disciplina de Banco de Dados II
 
 ### :writing_hand: Integrantes:
 
-- Arthur de Mello Vieira - Git: Arthur689347350
-- João Victor Miotelli Vitali - Git: JoaoMiotelli
-- Joel Francisco da Silva Filho - Git: JoelFrancisco 
-- Lucas de Castro Zanoni (brabo) - Git: Castrozan
-- Lucas de Oliveira Alano - Git: LucasAlano
-- Lucas Sernajoto Vanzeler Paixão - Git: Lucaspaixao-code
-- Nicolas Loffi Kaminski - Git: NicolasLK
-- Vinícius Pedroso Milanez - Git: viniciusmilanez
+- Arthur de Mello Vieira - [Arthur689347350](https://github.com/Arthur689347350)
+- João Victor Miotelli Vitali - [JoaoMiotelli](https://github.com/JoaoMiotelli)
+- Joel Francisco da Silva Filho - [JoelFrancisco](https://github.com/JoelFrancisco)
+- Lucas de Castro Zanoni (brabo) - [Castrozan](https://github.com/Castrozan)
+- Lucas de Oliveira Alano - [LucasAlano](https://github.com/LucasAlano)
+- Lucas Sernajoto Vanzeler Paixão - [Lucaspaixao-code](https://github.com/Lucaspaixao-code)
+- Nicolas Loffi Kaminski - [NicolasLK](https://github.com/NicolasLK)
+- Vinícius Pedroso Milanez - [viniciusmilanez](https://github.com/viniciusmilanez)
 
 ## Regras Sistema
 
@@ -19,9 +19,12 @@ Links:
 
 Modelo físico: https://dbdiagram.io/d/647fb5d3722eb7749483ccbc
 
+
+Dicionário de dados: https://docs.google.com/spreadsheets/d/1xsuBgEcH26raxDvMKykXwvrgO1BwqrB-gLNMjg5Jg4c/edit?pli=1#gid=1594899475 (caso precise de alguma correção, favor avisar :) )
+
 ## Descrição
 
-A aplicação é um sistema de locação de imoveis (Sas) para locadoras. 
+A aplicação é um sistema de locação de imoveis (Saas) para locadoras. 
 
 ## Arquitetura
 
@@ -34,18 +37,23 @@ Front em React.
 Relatório de imóveis locados por região;
 Relatório de pagamento por locatário;
 Qntde de imoveis locados por lpcsatario;
-Valor dos imoveis locados;
-Locatarios inadimplentes;
-Valor inadimplentes;
-Ranking de imobiliarias:  imoveis locados, dividas
+
+#### Outros relatórios possíveis
+
+1 - Valor dos imoveis locados;
+2 - Locatarios inadimplentes;
+3 - Valor inadimplentes;
+
+##### Principal
+1 - Ranking de imobiliarias:  imoveis locados e por dividas
 
 Param data_inicio e data_fim - relacionadas ao pagamento/vencimentos
 
 nome_imobiliária;
-qtde_imoveis_licados
-Valor_total_locacao
-Qtde_imoveis_locacao_aberto
-Valor_total_locacao_aberto
+qtde_imoveis_licados;
+Valor_total_locacao;
+Qtde_imoveis_locacao_aberto;
+Valor_total_locacao_aberto.
 
 Trazer o valor total da divida.
 
