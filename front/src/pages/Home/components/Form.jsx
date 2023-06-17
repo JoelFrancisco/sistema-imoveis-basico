@@ -83,6 +83,17 @@ export function Form() {
             width="15rem"
           />
         </Flex>
+        <Flex alignItems="center">
+          <FormLabel textAlign="center">Nome imobiliaria:</FormLabel>
+          <Input
+            id="rent_state"
+            type="text"
+            size="md"
+            variant="filled"
+            borderRadius="16"
+            width="16rem"
+          />
+        </Flex>
       </Stack>
       <Divider />
       <Text>Informe os dados do locatario:</Text>
