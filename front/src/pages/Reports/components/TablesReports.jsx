@@ -199,16 +199,16 @@ export function TablesReports() {
                 nome imobiliaria
               </Th>
               <Th textAlign="center" fontSize="0.75rem">
-                imoveis locados
+                dados imoveis
               </Th>
               <Th textAlign="center" fontSize="0.75rem">
-                total contratos
+                nome/cpf locador
               </Th>
               <Th textAlign="center" fontSize="0.75rem">
-                total contratos abertos
+                nome/cpf locatario
               </Th>
               <Th textAlign="center" fontSize="0.75rem">
-                contratos vencidos
+                data inicio/data fim
               </Th>
               <Th textAlign="center" fontSize="0.75rem">
                 parcelas vencidas
