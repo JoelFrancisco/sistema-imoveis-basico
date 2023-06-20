@@ -71,7 +71,15 @@ IF EXISTS (SELECT 1
 ALTER TABLE Imovel
 	DROP CONSTRAINT FK_CD_ENDERECO; 
 
+-- Drop da FK_CD_IMOBILIARIA na tabela Contrato
+IF EXISTS (SELECT 1
+	FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+   WHERE r.fkeyid = OBJECT_ID('Contrato') AND o.name = 'FK_CD_IMOBILIARIA')
+ALTER TABLE Contrato
+	DROP CONSTRAINT FK_CD_IMOBILIARIA; 
+
 -------------------------------------------------------------------------------
+
 -- Drop das tabelas
 
 -- Drop da tabela Pessoa se existir
@@ -119,6 +127,7 @@ IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[Pais]') AND type = 'U
 DROP TABLE [Pais];
 
 -------------------------------------------------------------------------------
+
 -- Criação das tabelas
 
 CREATE TABLE [Pessoa] (
@@ -137,7 +146,8 @@ CREATE TABLE [Contrato] (
   [status_contrato] char(1),
   [cd_locador] int,
   [cd_locatario] int,
-  [cd_imovel] int
+  [cd_imovel] int,
+  [cd_imobiliaria] int
 );
 
 CREATE TABLE [Pagamento] (
@@ -206,9 +216,6 @@ CREATE TABLE [Pais] (
   [nome_pais] varchar(120)
 );
 
--------------------------------------------------------------------------------
--- Cria as FKs
-
 ALTER TABLE [Dados_bancarios]
 ADD CONSTRAINT FK_CD_PESSOA FOREIGN KEY ([cd_pessoa])
 REFERENCES [Pessoa] ([cd_pessoa]);
@@ -250,7 +257,12 @@ ALTER TABLE [Imovel]
 ADD CONSTRAINT FK_CD_ENDERECO FOREIGN KEY ([cd_endereco])
 REFERENCES [Endereco] ([cd_endereco]);
 
+ALTER TABLE [Contrato]
+ADD CONSTRAINT FK_CD_IMOBILIARIA FOREIGN KEY ([cd_imobiliaria])
+REFERENCES [Imobiliaria] ([cd_imobiliaria]);
+
 -------------------------------------------------------------------------------
+
 -- Insersão de dados para teste
 
 INSERT INTO [Pais] ([cd_pais], [nome_pais]) VALUES
@@ -298,10 +310,10 @@ INSERT INTO [imobiliaria] ([cd_imobiliaria], [nome_locadora], [cnpj], [email]) V
 (1, 'Imobiliária X', '12345678901234', 'contato@imobiliariax.com'),
 (2, 'Imobiliária Y', '56789012345678', 'contato@imobiliariay.com');
 
-INSERT INTO [Contrato] ([cd_contrato], [valor], [data_inicio], [data_fim], [status_contrato], [cd_locador], [cd_locatario], [cd_imovel]) VALUES
-(1, 1500, '2023-01-01', '2023-12-31', 'A', 1, 2, 1),
-(2, 2000, '2023-02-01', '2023-07-31', 'A', 3, 2, 2),
-(3, 3000, '2023-03-01', '2023-06-30', 'A', 2, 1, 3);
+INSERT INTO [Contrato] ([cd_contrato], [valor], [data_inicio], [data_fim], [status_contrato], [cd_locador], [cd_locatario], [cd_imovel], [cd_imobiliaria]) VALUES
+(1, 1500, '2023-01-01', '2023-12-31', 'A', 1, 2, 1, 1),
+(2, 2000, '2023-02-01', '2023-07-31', 'A', 3, 2, 2, 2),
+(3, 3000, '2023-03-01', '2023-06-30', 'A', 2, 1, 3, 2);
 
 INSERT INTO [Pagamento] ([cd_pagamento], [valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
 (1, 1000.0, '2023-01-05', 1000.0, '2023-01-10', 'joao@email.com', 'P', 1),
@@ -309,6 +321,7 @@ INSERT INTO [Pagamento] ([cd_pagamento], [valor_pa], [data_pagamento], [valor_tr
 (3, 2000.0, '2023-03-05', 2000.0, '2023-03-10', 'pedro@email.com', 'P', 3);
 
 -------------------------------------------------------------------------------
+
 -- Selects ae pra ajudar
     
 --select *
