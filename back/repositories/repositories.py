@@ -1,23 +1,23 @@
 from sqlalchemy.orm import Session
 
 from models.models import Pessoa, Contrato, Pagamento, Imovel
-from schemas.schemas import PessoaCreate, PessoaUpdate, ContratoCreate, ContratoUpdate, PagamentoCreate, PagamentoUpdate, ImovelCreate, ImovelUpdate
+from schemas.schemas import *
 
 # Repositório para Pessoa
-def get_pessoas(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Pessoa).offset(skip).limit(limit).all()
+def get_pessoas(db: Session):
+    return db.query(Pessoa).all()
 
 def get_pessoa(db: Session, pessoa_id: int):
     return db.query(Pessoa).filter(Pessoa.cd_pessoa == pessoa_id).first()
 
-def create_pessoa(db: Session, pessoa: PessoaCreate):
+def create_pessoa(db: Session, pessoa: PessoaSchema):
     db_pessoa = Pessoa(**pessoa.dict())
     db.add(db_pessoa)
     db.commit()
     db.refresh(db_pessoa)
     return db_pessoa
 
-def update_pessoa(db: Session, pessoa_id: int, pessoa: PessoaUpdate):
+def update_pessoa(db: Session, pessoa_id: int, pessoa: PessoaSchema):
     db_pessoa = db.query(Pessoa).filter(Pessoa.cd_pessoa == pessoa_id).first()
     if not db_pessoa:
         return None
@@ -42,14 +42,14 @@ def get_contratos(db: Session, skip: int = 0, limit: int = 10):
 def get_contrato(db: Session, contrato_id: int):
     return db.query(Contrato).filter(Contrato.cd_contrato == contrato_id).first()
 
-def create_contrato(db: Session, contrato: ContratoCreate):
+def create_contrato(db: Session, contrato: ContratoSchema):
     db_contrato = Contrato(**contrato.dict())
     db.add(db_contrato)
     db.commit()
     db.refresh(db_contrato)
     return db_contrato
 
-def update_contrato(db: Session, contrato_id: int, contrato: ContratoUpdate):
+def update_contrato(db: Session, contrato_id: int, contrato: ContratoSchema):
     db_contrato = db.query(Contrato).filter(Contrato.cd_contrato == contrato_id).first()
     if not db_contrato:
         return None
@@ -74,14 +74,14 @@ def get_pagamentos(db: Session, skip: int = 0, limit: int = 10):
 def get_pagamento(db: Session, pagamento_id: int):
     return db.query(Pagamento).filter(Pagamento.cd_pagamento == pagamento_id).first()
 
-def create_pagamento(db: Session, pagamento: PagamentoCreate):
+def create_pagamento(db: Session, pagamento: PagamentoSchema):
     db_pagamento = Pagamento(**pagamento.dict())
     db.add(db_pagamento)
     db.commit()
     db.refresh(db_pagamento)
     return db_pagamento
 
-def update_pagamento(db: Session, pagamento_id: int, pagamento: PagamentoUpdate):
+def update_pagamento(db: Session, pagamento_id: int, pagamento: PagamentoSchema):
     db_pagamento = db.query(Pagamento).filter(Pagamento.cd_pagamento == pagamento_id).first()
     if not db_pagamento:
         return None
@@ -106,14 +106,14 @@ def get_imoveis(db: Session, skip: int = 0, limit: int = 10):
 def get_imovel(db: Session, imovel_id: int):
     return db.query(Imovel).filter(Imovel.cd_imovel == imovel_id).first()
 
-def create_imovel(db: Session, imovel: ImovelCreate):
+def create_imovel(db: Session, imovel: ImovelSchema):
     db_imovel = Imovel(**imovel.dict())
     db.add(db_imovel)
     db.commit()
     db.refresh(db_imovel)
     return db_imovel
 
-def update_imovel(db: Session, imovel_id: int, imovel: ImovelUpdate):
+def update_imovel(db: Session, imovel_id: int, imovel: ImovelSchema):
     db_imovel = db.query(Imovel).filter(Imovel.cd_imovel == imovel_id).first()
     if not db_imovel:
         return None
