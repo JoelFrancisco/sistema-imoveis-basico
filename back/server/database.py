@@ -3,8 +3,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from typing import Generator
 
-
-DB_DRIVER = "{ODBC Driver 17 for SQL Server}"
 DB_SERVER = "nome-do-servidor-do-banco2234.database.windows.net"
 DB_PORT = "1433"
 DB_DATABASE = "nome-do-banco-de-dados2234"
