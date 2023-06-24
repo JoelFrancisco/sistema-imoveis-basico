@@ -43,12 +43,12 @@ IF EXISTS (SELECT 1
 ALTER TABLE Estado
 	DROP CONSTRAINT FK_CD_PAIS;
 
--- Drop da FK_UF na tabela Cidade
+-- Drop da FK_cd_estado na tabela Cidade
 IF EXISTS (SELECT 1
 	FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
-   WHERE r.fkeyid = OBJECT_ID('Cidade') AND o.name = 'FK_UF')
+   WHERE r.fkeyid = OBJECT_ID('Cidade') AND o.name = 'FK_cd_estado')
 ALTER TABLE Cidade
-	DROP CONSTRAINT FK_UF;
+	DROP CONSTRAINT FK_cd_estado;
 
 -- Drop da FK_CD_CIDADE na tabela Bairro
 IF EXISTS (SELECT 1
@@ -200,11 +200,11 @@ CREATE TABLE [Bairro] (
 CREATE TABLE [Cidade] (
   [cd_cidade] int IDENTITY PRIMARY KEY,
   [nome_cidade] varchar(120),
-  [uf] char(2)
+  [cd_estado] int
 );
 
 CREATE TABLE [Estado] (
-  [uf] char(2) PRIMARY KEY,
+  [cd_estado] int IDENTITY PRIMARY KEY,
   [nome_estado] varchar(120),
   [cd_pais] int
 );
@@ -220,7 +220,6 @@ CREATE TABLE [Pais] (
 ALTER TABLE [Dados_bancarios]
 ADD CONSTRAINT FK_CD_PESSOA FOREIGN KEY ([cd_pessoa])
 REFERENCES [Pessoa] ([cd_pessoa]);
-
 
 ALTER TABLE [Contrato]
 ADD CONSTRAINT FK_CD_LOCADOR FOREIGN KEY ([cd_locador])
@@ -243,8 +242,8 @@ ADD CONSTRAINT FK_CD_PAIS FOREIGN KEY ([cd_pais])
 REFERENCES [Pais] ([cd_pais]);
 
 ALTER TABLE [Cidade]
-ADD CONSTRAINT FK_UF FOREIGN KEY ([uf])
-REFERENCES [Estado] ([uf]);
+ADD CONSTRAINT FK_cd_estado FOREIGN KEY ([cd_estado])
+REFERENCES [Estado] ([cd_estado]);
 
 ALTER TABLE [Bairro]
 ADD CONSTRAINT FK_CD_CIDADE FOREIGN KEY ([cd_cidade])
@@ -270,12 +269,12 @@ INSERT INTO [Pais] ([nome_pais]) VALUES
 ('Estados Unidos'),
 ('Canadá');
 
-INSERT INTO [Estado] ([uf], [nome_estado], [cd_pais]) VALUES
-(1, 'São Paulo', 1),
-(2, 'Nova York', 2),
-(3, 'Ontário', 3);
+INSERT INTO [Estado] ([nome_estado], [cd_pais]) VALUES
+('São Paulo', 1),
+('Nova York', 2),
+('Ontário', 3);
 
-INSERT INTO [Cidade] ([nome_cidade], [uf]) VALUES
+INSERT INTO [Cidade] ([nome_cidade], [cd_estado]) VALUES
 ('São Paulo', 1),
 ('Nova York', 2),
 ('Toronto', 3);
