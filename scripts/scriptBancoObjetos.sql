@@ -1,4 +1,28 @@
 -------------------------------------------------------------------------------
+-- Drop procedures if exists
+
+DROP PROCEDURE IF EXISTS p_abre_competencia;
+
+-------------------------------------------------------------------------------
+-- Create procedures 
+
+-- create procedure p_abre_competencia
+create procedure p_abre_competencia as 
+BEGIN
+	declare @id_competencia_anterior int,
+			@competencia_anterior date;
+	
+	select @id_competencia_anterior = MAX(cd_competencia)
+	  from Competencia;
+	
+	SELECT @competencia_anterior = competencia
+	  from Competencia;
+	
+	insert into Competencia
+	values (DATEADD(MONTH, 1, @competencia_anterior));
+END;
+
+-------------------------------------------------------------------------------
 -- Drop das Fks
    
 -- Drop da FK_CD_PESSOA na tabela Dados_bancarios
@@ -81,6 +105,10 @@ ALTER TABLE Contrato
 -------------------------------------------------------------------------------
 -- Drop das tabelas
 
+-- Drop da tabela Competencia se existir
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[Competencia]') AND type = 'U')
+DROP TABLE [Competencia];
+
 -- Drop da tabela Pessoa se existir
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[Pessoa]') AND type = 'U')
 DROP TABLE [Pessoa];
@@ -127,6 +155,11 @@ DROP TABLE [Pais];
 
 ------------------------------------------------------------------------------- 	
 -- Criação das tabelas
+
+CREATE TABLE [Competencia] (
+  [cd_competencia] int IDENTITY PRIMARY KEY,
+  [competencia] date
+);
 
 CREATE TABLE [Pessoa] (
   [cd_pessoa] int IDENTITY PRIMARY KEY,
@@ -310,14 +343,28 @@ INSERT INTO [imobiliaria] ([nome_locadora], [cnpj], [email]) VALUES
 ('Imobiliária Y', '56789012345678', 'contato@imobiliariay.com');
 
 INSERT INTO [Contrato] ([valor], [data_inicio], [data_fim], [status_contrato], [cd_locador], [cd_locatario], [cd_imovel], [cd_imobiliaria]) VALUES
-(1500, '2023-01-01', '2023-12-31', 'A', 1, 2, 1, 1),
-(2000, '2023-02-01', '2023-07-31', 'A', 3, 2, 2, 2),
-(3000, '2023-03-01', '2023-06-30', 'A', 2, 1, 3, 2);
+(1500, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 1, 2, 1, 1),
+(2000, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 3, 2, 2, 2),
+(3000, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 2, 1, 3, 2);
 
 INSERT INTO [Pagamento] ([valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
-(1000.0, '2023-01-05', 1000.0, '2023-01-10', 'joao@email.com', 'P', 1),
-(1500.0, '2023-02-05', 1500.0, '2023-02-10', 'maria@email.com', 'P', 2),
-(2000.0, '2023-03-05', 2000.0, '2023-03-10', 'pedro@email.com', 'P', 3);
+(1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
+(1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
+(2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3);
+
+INSERT INTO [Competencia] ([competencia]) VALUES
+(DATEADD(MONTH, - 12, GETDATE())),
+(DATEADD(MONTH, - 11, GETDATE())),
+(DATEADD(MONTH, - 10, GETDATE())),
+(DATEADD(MONTH, - 9, GETDATE())),
+(DATEADD(MONTH, - 8, GETDATE())),
+(DATEADD(MONTH, - 7, GETDATE())),
+(DATEADD(MONTH, - 6, GETDATE())),
+(DATEADD(MONTH, - 5, GETDATE())),
+(DATEADD(MONTH, - 4, GETDATE())),
+(DATEADD(MONTH, - 3, GETDATE())),
+(DATEADD(MONTH, - 2, GETDATE())),
+(DATEADD(MONTH, - 1, GETDATE()));
 
 -------------------------------------------------------------------------------
 -- Selects ae pra ajudar
@@ -354,4 +401,3 @@ select *
   
 select *
   from Pagamento
-  
