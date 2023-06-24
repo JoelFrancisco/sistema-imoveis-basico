@@ -10,6 +10,7 @@ import {
   Divider,
   Select,
   Button,
+  Textarea,
 } from "@chakra-ui/react";
 
 export function Form() {
@@ -200,6 +201,10 @@ export function Form() {
         flexWrap="wrap"
         alignItems="center"
       >
+        <Flex>
+          <FormLabel>Descricao:</FormLabel>
+          <Textarea id="set_desc" w="46rem" size="md" />
+        </Flex>
         <Flex alignItems="center">
           <FormLabel>Tipo:</FormLabel>
           <Select
