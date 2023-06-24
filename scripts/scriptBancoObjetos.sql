@@ -79,7 +79,6 @@ ALTER TABLE Contrato
 	DROP CONSTRAINT FK_CD_IMOBILIARIA; 
 
 -------------------------------------------------------------------------------
-
 -- Drop das tabelas
 
 -- Drop da tabela Pessoa se existir
@@ -126,12 +125,11 @@ DROP TABLE [Estado];
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[Pais]') AND type = 'U')
 DROP TABLE [Pais];
 
--------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------- 	
 -- Criação das tabelas
 
 CREATE TABLE [Pessoa] (
-  [cd_pessoa] int PRIMARY KEY,
+  [cd_pessoa] int IDENTITY PRIMARY KEY,
   [nome] nvarchar(255),
   [telefone] varchar(20),
   [dt_nascimento] date,
@@ -139,7 +137,7 @@ CREATE TABLE [Pessoa] (
 );
 
 CREATE TABLE [Contrato] (
-  [cd_contrato] int PRIMARY KEY,
+  [cd_contrato] int IDENTITY PRIMARY KEY,
   [valor] int,
   [data_inicio] date,
   [data_fim] date,
@@ -151,7 +149,7 @@ CREATE TABLE [Contrato] (
 );
 
 CREATE TABLE [Pagamento] (
-  [cd_pagamento] int PRIMARY KEY,
+  [cd_pagamento] int IDENTITY PRIMARY KEY,
   [valor_pa] numeric(10,2),
   [data_pagamento] date,
   [valor_trasferido] numeric(10,2),
@@ -162,7 +160,7 @@ CREATE TABLE [Pagamento] (
 );
 
 CREATE TABLE [Imovel] (
-  [cd_imovel] int PRIMARY KEY,
+  [cd_imovel] int IDENTITY PRIMARY KEY,
   [ds_imovel] varchar(1000),
   [tipo_imovel] varchar(30),
   [area_construida] numeric(10,2),
@@ -171,7 +169,7 @@ CREATE TABLE [Imovel] (
 );
 
 CREATE TABLE [Dados_bancarios] (
-  [cd_dadosbancarios] int PRIMARY KEY,
+  [cd_dadosbancarios] int IDENTITY PRIMARY KEY,
   [banco_locatario] varchar(20),
   [agencia_locatario] int,
   [conta_locatario] int,
@@ -179,14 +177,14 @@ CREATE TABLE [Dados_bancarios] (
 );
 
 CREATE TABLE [imobiliaria] (
-  [cd_imobiliaria] int PRIMARY KEY,
+  [cd_imobiliaria] int IDENTITY PRIMARY KEY,
   [nome_locadora] varchar(120),
   [cnpj] char(14),
   [email] varchar(120)
 );
 
 CREATE TABLE [Endereco] (
-  [cd_endereco] int PRIMARY KEY,
+  [cd_endereco] int IDENTITY PRIMARY KEY,
   [rua] varchar(120),
   [numero] int,
   [cep] char(8),
@@ -194,13 +192,13 @@ CREATE TABLE [Endereco] (
 );
 
 CREATE TABLE [Bairro] (
-  [cd_bairro] int PRIMARY KEY,
+  [cd_bairro] int IDENTITY PRIMARY KEY,
   [nome_bairro] varchar(120),
   [cd_cidade] int
 );
 
 CREATE TABLE [Cidade] (
-  [cd_cidade] int PRIMARY KEY,
+  [cd_cidade] int IDENTITY PRIMARY KEY,
   [nome_cidade] varchar(120),
   [uf] char(2)
 );
@@ -212,9 +210,12 @@ CREATE TABLE [Estado] (
 );
 
 CREATE TABLE [Pais] (
-  [cd_pais] int PRIMARY KEY,
+  [cd_pais] int IDENTITY PRIMARY KEY,
   [nome_pais] varchar(120)
 );
+
+-------------------------------------------------------------------------------
+-- Criação das FKs
 
 ALTER TABLE [Dados_bancarios]
 ADD CONSTRAINT FK_CD_PESSOA FOREIGN KEY ([cd_pessoa])
@@ -262,98 +263,96 @@ ADD CONSTRAINT FK_CD_IMOBILIARIA FOREIGN KEY ([cd_imobiliaria])
 REFERENCES [Imobiliaria] ([cd_imobiliaria]);
 
 -------------------------------------------------------------------------------
-
 -- Insersão de dados para teste
 
-INSERT INTO [Pais] ([cd_pais], [nome_pais]) VALUES
-(1, 'Brasil'),
-(2, 'Estados Unidos'),
-(3, 'Canadá');
+INSERT INTO [Pais] ([nome_pais]) VALUES
+('Brasil'),
+('Estados Unidos'),
+('Canadá');
 
 INSERT INTO [Estado] ([uf], [nome_estado], [cd_pais]) VALUES
 (1, 'São Paulo', 1),
 (2, 'Nova York', 2),
 (3, 'Ontário', 3);
 
-INSERT INTO [Cidade] ([cd_cidade], [nome_cidade], [uf]) VALUES
-(1, 'São Paulo', 1),
-(2, 'Nova York', 2),
-(3, 'Toronto', 3);
+INSERT INTO [Cidade] ([nome_cidade], [uf]) VALUES
+('São Paulo', 1),
+('Nova York', 2),
+('Toronto', 3);
 
-INSERT INTO [Bairro] ([cd_bairro], [nome_bairro], [cd_cidade]) VALUES
-(1, 'Centro', 1),
-(2, 'Brooklyn', 2),
-(3, 'Yorkville', 2),
-(4, 'Downtown', 3);
+INSERT INTO [Bairro] ([nome_bairro], [cd_cidade]) VALUES
+('Centro', 1),
+('Brooklyn', 2),
+('Yorkville', 2),
+('Downtown', 3);
 
-INSERT INTO [Endereco] ([cd_endereco], [rua], [numero], [cep], [cd_bairro]) VALUES
-(1, 'Rua A', 123, '01234', 1),
-(2, 'Main Street', 456, '12345', 2),
-(3, 'Yonge Street', 789, '67890', 3);
+INSERT INTO [Endereco] ([rua], [numero], [cep], [cd_bairro]) VALUES
+('Rua A', 123, '01234', 1),
+('Main Street', 456, '12345', 2),
+('Yonge Street', 789, '67890', 3);
 
-INSERT INTO [Pessoa] ([cd_pessoa], [nome], [telefone], [dt_nascimento], [cpf]) VALUES
-(1, 'João', '1111111111', '1990-01-01', '111.111.111-11'),
-(2, 'Maria', '2222222222', '1995-02-02', '222.222.222-22'),
-(3, 'Pedro', '3333333333', '1985-03-03', '333.333.333-33');
+INSERT INTO [Pessoa] ([nome], [telefone], [dt_nascimento], [cpf]) VALUES
+('João', '1111111111', '1990-01-01', '111.111.111-11'),
+('Maria', '2222222222', '1995-02-02', '222.222.222-22'),
+('Pedro', '3333333333', '1985-03-03', '333.333.333-33');
 
-INSERT INTO [Imovel] ([cd_imovel], [ds_imovel], [tipo_imovel], [area_construida], [area_total], [cd_endereco]) VALUES
-(1, 'Casa na praia', 'Residencial', 150.5, 300.75, 1),
-(2, 'Apartamento no centro', 'Residencial', 80.25, 100.5, 2),
-(3, 'Escritório comercial', 'Comercial', 200.0, 200.0, 3);
+INSERT INTO [Imovel] ([ds_imovel], [tipo_imovel], [area_construida], [area_total], [cd_endereco]) VALUES
+('Casa na praia', 'Residencial', 150.5, 300.75, 1),
+('Apartamento no centro', 'Residencial', 80.25, 100.5, 2),
+('Escritório comercial', 'Comercial', 200.0, 200.0, 3);
 
-INSERT INTO [Dados_bancarios] ([cd_dadosbancarios], [banco_locatario], [agencia_locatario], [conta_locatario], [cd_pessoa]) VALUES
-(1, 'Banco A', 1234, 56789, 1),
-(2, 'Banco B', 4321, 98765, 2),
-(3, 'Banco C', 2468, 13579, 3);
+INSERT INTO [Dados_bancarios] ([banco_locatario], [agencia_locatario], [conta_locatario], [cd_pessoa]) VALUES
+('Banco A', 1234, 56789, 1),
+('Banco B', 4321, 98765, 2),
+('Banco C', 2468, 13579, 3);
 
-INSERT INTO [imobiliaria] ([cd_imobiliaria], [nome_locadora], [cnpj], [email]) VALUES
-(1, 'Imobiliária X', '12345678901234', 'contato@imobiliariax.com'),
-(2, 'Imobiliária Y', '56789012345678', 'contato@imobiliariay.com');
+INSERT INTO [imobiliaria] ([nome_locadora], [cnpj], [email]) VALUES
+('Imobiliária X', '12345678901234', 'contato@imobiliariax.com'),
+('Imobiliária Y', '56789012345678', 'contato@imobiliariay.com');
 
-INSERT INTO [Contrato] ([cd_contrato], [valor], [data_inicio], [data_fim], [status_contrato], [cd_locador], [cd_locatario], [cd_imovel], [cd_imobiliaria]) VALUES
-(1, 1500, '2023-01-01', '2023-12-31', 'A', 1, 2, 1, 1),
-(2, 2000, '2023-02-01', '2023-07-31', 'A', 3, 2, 2, 2),
-(3, 3000, '2023-03-01', '2023-06-30', 'A', 2, 1, 3, 2);
+INSERT INTO [Contrato] ([valor], [data_inicio], [data_fim], [status_contrato], [cd_locador], [cd_locatario], [cd_imovel], [cd_imobiliaria]) VALUES
+(1500, '2023-01-01', '2023-12-31', 'A', 1, 2, 1, 1),
+(2000, '2023-02-01', '2023-07-31', 'A', 3, 2, 2, 2),
+(3000, '2023-03-01', '2023-06-30', 'A', 2, 1, 3, 2);
 
-INSERT INTO [Pagamento] ([cd_pagamento], [valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
-(1, 1000.0, '2023-01-05', 1000.0, '2023-01-10', 'joao@email.com', 'P', 1),
-(2, 1500.0, '2023-02-05', 1500.0, '2023-02-10', 'maria@email.com', 'P', 2),
-(3, 2000.0, '2023-03-05', 2000.0, '2023-03-10', 'pedro@email.com', 'P', 3);
+INSERT INTO [Pagamento] ([valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
+(1000.0, '2023-01-05', 1000.0, '2023-01-10', 'joao@email.com', 'P', 1),
+(1500.0, '2023-02-05', 1500.0, '2023-02-10', 'maria@email.com', 'P', 2),
+(2000.0, '2023-03-05', 2000.0, '2023-03-10', 'pedro@email.com', 'P', 3);
 
 -------------------------------------------------------------------------------
-
 -- Selects ae pra ajudar
     
---select *
---  from endereco  
---  
---select *
---  from Bairro
---  
---select *
---  from Cidade
---
---select *
---  from estado
---
---select *
---  from pais  
---  
---select *
---  from Dados_bancarios
---  
---select *
---  from Pessoa
---  
---select *
---  from imovel
---
---select *
---  from imobiliaria
---  
---select *
---  from Contrato
---  
---select *
---  from Pagamento
+select *
+  from endereco  
+  
+select *
+  from Bairro
+  
+select *
+  from Cidade
+
+select *
+  from estado
+
+select *
+  from pais  
+  
+select *
+  from Dados_bancarios
+  
+select *
+  from Pessoa
+  
+select *
+  from imovel
+
+select *
+  from imobiliaria
+  
+select *
+  from Contrato
+  
+select *
+  from Pagamento
   
