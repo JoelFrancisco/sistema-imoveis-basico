@@ -411,6 +411,8 @@ BEGIN
 	SELECT @competencia_anterior = data_competencia
 	  from Competencia;
 	
-	insert into Competencia
-	values (DATEADD(MONTH, 1, @competencia_anterior));
+	if datediff(month, @competencia_anterior, getdate()) > 0
+		insert into Competencia
+		values (DATEADD(MONTH, 1, @competencia_anterior));
+
 END;
