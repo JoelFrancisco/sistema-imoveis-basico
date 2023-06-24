@@ -4,27 +4,16 @@
 DROP PROCEDURE IF EXISTS p_abre_competencia;
 
 -------------------------------------------------------------------------------
--- Create procedures 
-
--- create procedure p_abre_competencia
-create procedure p_abre_competencia as 
-BEGIN
-	declare @id_competencia_anterior int,
-			@competencia_anterior date;
-	
-	select @id_competencia_anterior = MAX(cd_competencia)
-	  from Competencia;
-	
-	SELECT @competencia_anterior = competencia
-	  from Competencia;
-	
-	insert into Competencia
-	values (DATEADD(MONTH, 1, @competencia_anterior));
-END;
-
--------------------------------------------------------------------------------
 -- Drop das Fks
    
+-- Drop da FK_CD_COMPETENCIA na tabela Pagamento
+IF EXISTS (SELECT 1
+	FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+   WHERE r.fkeyid = OBJECT_ID('Pagamento') AND o.name = 'FK_CD_COMPETENCIA')
+ALTER TABLE Pagamento
+	DROP CONSTRAINT FK_CD_COMPETENCIA;
+
+
 -- Drop da FK_CD_PESSOA na tabela Dados_bancarios
 IF EXISTS (SELECT 1
 	FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
@@ -158,7 +147,7 @@ DROP TABLE [Pais];
 
 CREATE TABLE [Competencia] (
   [cd_competencia] int IDENTITY PRIMARY KEY,
-  [competencia] date
+  [data_competencia] date
 );
 
 CREATE TABLE [Pessoa] (
@@ -183,6 +172,7 @@ CREATE TABLE [Contrato] (
 
 CREATE TABLE [Pagamento] (
   [cd_pagamento] int IDENTITY PRIMARY KEY,
+  [cd_competencia] int,
   [valor_pa] numeric(10,2),
   [data_pagamento] date,
   [valor_trasferido] numeric(10,2),
@@ -249,6 +239,10 @@ CREATE TABLE [Pais] (
 
 -------------------------------------------------------------------------------
 -- Criação das FKs
+
+ALTER TABLE [Pagamento]
+ADD CONSTRAINT FK_CD_COMPETENCIA FOREIGN KEY ([cd_competencia])
+REFERENCES [Competencia] ([cd_competencia]);
 
 ALTER TABLE [Dados_bancarios]
 ADD CONSTRAINT FK_CD_PESSOA FOREIGN KEY ([cd_pessoa])
@@ -347,12 +341,7 @@ INSERT INTO [Contrato] ([valor], [data_inicio], [data_fim], [status_contrato], [
 (2000, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 3, 2, 2, 2),
 (3000, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 2, 1, 3, 2);
 
-INSERT INTO [Pagamento] ([valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
-(1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
-(1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
-(2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3);
-
-INSERT INTO [Competencia] ([competencia]) VALUES
+INSERT INTO [Competencia] ([data_competencia]) VALUES
 (DATEADD(MONTH, - 12, GETDATE())),
 (DATEADD(MONTH, - 11, GETDATE())),
 (DATEADD(MONTH, - 10, GETDATE())),
@@ -366,38 +355,62 @@ INSERT INTO [Competencia] ([competencia]) VALUES
 (DATEADD(MONTH, - 2, GETDATE())),
 (DATEADD(MONTH, - 1, GETDATE()));
 
+INSERT INTO [Pagamento] ([cd_competencia], [valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
+(1, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
+(2, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
+(3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3);
+
 -------------------------------------------------------------------------------
 -- Selects ae pra ajudar
     
-select *
-  from endereco  
-  
-select *
-  from Bairro
-  
-select *
-  from Cidade
+--select *
+--  from endereco  
+--  
+--select *
+--  from Bairro
+--  
+--select *
+--  from Cidade
+--
+--select *
+--  from estado
+--
+--select *
+--  from pais  
+--  
+--select *
+--  from Dados_bancarios
+--  
+--select *
+--  from Pessoa
+--  
+--select *
+--  from imovel
+--
+--select *
+--  from imobiliaria
+--  
+--select *
+--  from Contrato
+--  
+--select *
+--  from Pagamento;
 
-select *
-  from estado
+-------------------------------------------------------------------------------
+-- Create procedures 
 
-select *
-  from pais  
-  
-select *
-  from Dados_bancarios
-  
-select *
-  from Pessoa
-  
-select *
-  from imovel
-
-select *
-  from imobiliaria
-  
-select *
-  from Contrato
-  
-select *
-  from Pagamento
+-- create procedure p_abre_competencia
+create procedure p_abre_competencia as 
+BEGIN
+	declare @id_competencia_anterior int,
+			@competencia_anterior date;
+	
+	select @id_competencia_anterior = MAX(cd_competencia)
+	  from Competencia;
+	
+	SELECT @competencia_anterior = data_competencia
+	  from Competencia;
+	
+	insert into Competencia
+	values (DATEADD(MONTH, 1, @competencia_anterior));
+END;
