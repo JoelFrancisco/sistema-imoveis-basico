@@ -51,7 +51,6 @@ exec pc_relatorio_valor_imovel
 go
 
 --Relatório Pagamentos por Locatário
-
 CREATE OR ALTER PROCEDURE pr_relatorio_pagamento_por_locatario AS
 BEGIN
     CREATE TABLE #relatorio_pagamento_por_locatario (
@@ -268,3 +267,107 @@ GO
 
 
 	
+--Relatório da Quantidade de Imóveis por Locador
+CREATE OR ALTER PROCEDURE pr_relatorio_qnt_imoveis_locador AS
+BEGIN
+    CREATE TABLE #qnt_imoveis_locador (
+        tittle varchar(100),
+        cd_locador varchar(100),
+        nome varchar(100),
+        cd_imovel int
+    )
+    INSERT INTO #qnt_imoveis_locador
+    SELECT
+        'Relatório de imóveis por locador',
+        CT.cd_locador,
+        P.nome, 
+        COUNT(CT.cd_imovel) AS quantidade_imoveis_locados
+    FROM
+        Contrato CT
+        INNER JOIN Pessoa P ON CT.cd_locador = P.cd_pessoa
+    GROUP BY
+        CT.cd_locador, P.nome;
+
+    SELECT * FROM #qnt_imoveis_locador
+
+    DROP TABLE #qnt_imoveis_locador
+END
+GO
+
+EXEC pr_relatorio_qnt_imoveis_locador
+GO
+
+
+
+--Relatório de Imóveis por Locatário
+CREATE OR ALTER PROCEDURE pr_qnt_imoveis_locatario AS
+BEGIN
+    CREATE TABLE #qnt_imoveis_locatario(
+        tittle varchar(100),
+        nome varchar(100),
+        cd_locatario varchar(100),
+        cd_imovel int
+    )
+
+    INSERT INTO #qnt_imoveis_locatario
+    SELECT
+        'Relatório de imóveis por locatário',
+        P.nome,
+        CT.cd_locatario,
+        COUNT(CT.cd_imovel) AS quantidade_imoveis_locados
+    FROM
+        Contrato CT
+        INNER JOIN Pessoa P ON CT.cd_locatario = P.cd_pessoa
+    GROUP BY
+        CT.cd_locatario, P.nome;
+
+    SELECT * FROM #qnt_imoveis_locatario
+
+    DROP TABLE #qnt_imoveis_locatario
+END
+GO
+
+EXEC pr_qnt_imoveis_locatario
+GO
+
+
+
+--Relatório de Imóveis por Região
+CREATE OR ALTER PROCEDURE pr_relatorio_imoveis_regiao AS
+BEGIN
+    CREATE TABLE #relatorio_imoveis_regiao (
+        tittle varchar(100),
+        cd_imovel varchar(100), 
+        rua varchar(100), 
+        numero varchar(100), 
+        nome_bairro varchar(100), 
+        nome_cidade varchar(100), 
+        nome_estado varchar(100), 
+        nome_pais varchar(100)
+    )
+    INSERT INTO #relatorio_imoveis_regiao
+    SELECT
+        'Relatório de imóveis locados por região',
+        I.cd_imovel, 
+        E.rua, 
+        E.numero, 
+        B.nome_bairro, 
+        C.nome_cidade, 
+        ES.nome_estado, 
+        P.nome_pais
+    FROM Contrato CT
+        INNER JOIN Imovel I ON CT.cd_imovel = I.cd_imovel
+        INNER JOIN Endereco E ON I.cd_endereco = E.cd_endereco
+        INNER JOIN Bairro B ON E.cd_bairro = B.cd_bairro
+        INNER JOIN Cidade C ON B.cd_cidade = C.cd_cidade
+        INNER JOIN estado es on c.cd_estado = es.cd_estado
+        INNER JOIN pais p on es.cd_pais = p.cd_pais
+
+    SELECT * FROM #relatorio_imoveis_regiao
+
+    DROP TABLE #relatorio_imoveis_regiao
+END
+GO
+
+EXEC pr_relatorio_imoveis_regiao
+GO
