@@ -50,7 +50,7 @@ go
 exec pc_relatorio_valor_imovel
 go
 
---Relat髍io Pagamentos por Locat醨io
+--Relat贸rio Pagamentos por Locat谩rio
 
 CREATE OR ALTER PROCEDURE pr_relatorio_pagamento_por_locatario AS
 BEGIN
@@ -68,7 +68,7 @@ BEGIN
     )
     INSERT INTO #relatorio_pagamento_por_locatario
     SELECT
-        'Relat髍io de pagamento por locat醨io',
+        'Relat贸rio de pagamento por locat谩rio',
         P.cd_pessoa,
         P.nome,
 		PT.email,
@@ -109,7 +109,7 @@ BEGIN
 
 	INSERT INTO #temp_locatario_inadimplente
 	SELECT
-	'Rel醫orio de Locatarios Inadimpletes',
+	'Rel谩torio de Locatarios Inadimpletes',
 	c.cd_contrato,
     pe.nome AS locatario,
     pe.cd_pessoa,
@@ -158,7 +158,7 @@ BEGIN
 
 	INSERT INTO #temp_valor_inadimplente
 	SELECT
-		'Relat髍io de valor inadimplente',
+		'Relat贸rio de valor inadimplente',
 		pe.cd_pessoa,
 		c.cd_contrato, 
 		pe.nome, 
@@ -226,6 +226,45 @@ GO
 EXEC pr_ranking_imobiliarias
 
 
+		
+--Relat贸rio Pagamentos por Locat谩rio
+CREATE OR ALTER PROCEDURE pr_relatorio_pagamento_por_locatario AS
+BEGIN
+    CREATE TABLE #relatorio_pagamento_por_locatario (
+        tittle varchar(100),
+        cd_pessoa varchar(100),
+        locatario varchar(100),
+        valor_pago varchar(100),
+        data_pagamento varchar(100),
+        valor_trasferido varchar(100),
+        data_vencimento varchar(100),
+        status_pagamento varchar(100),
+        cd_imovel int
+    )
+    INSERT INTO #relatorio_pagamento_por_locatario
+    SELECT
+        'Relat贸rio de pagamento por locat谩rio',
+        P.cd_pessoa,
+        P.nome AS nome_locatario,
+        PT.valor_pa AS valor_pago,
+        ISNULL(CONVERT(varchar(10),PT.data_pagamento,120),'Aguardando'),
+        ISNULL(PT.valor_trasferido, '0'),
+        PT.data_vencimento,
+        ISNULL(PT.status_pagamento, 'V'),
+        CT.cd_imovel
+    FROM
+      Pessoa P
+      INNER JOIN Contrato CT ON P.cd_pessoa = CT.cd_locatario
+      INNER JOIN Pagamento PT ON CT.cd_contrato = PT.cd_contrato
+
+    SELECT * FROM #relatorio_pagamento_por_locatario
+
+    DROP TABLE #relatorio_pagamento_por_locatario
+END
+GO
+
+EXEC pr_relatorio_pagamento_por_locatario
+GO
 
 
 	
