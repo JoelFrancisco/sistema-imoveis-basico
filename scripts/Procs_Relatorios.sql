@@ -1,10 +1,8 @@
-
 --Relatorio valor dos imoveis alocados
 
-create or alter proc pc_relatorio_valor_imovel as 
-begin
-	
-	create table #temp_relatorio_imovel (
+CREATE OR ALTER PROC pc_relatorio_valor_imovel AS 
+BEGIN
+	CREATE TABLE #temp_relatorio_imovel (
 		type_relatorio varchar(100),
 		cd_imovel varchar(100),
 		ds_imovel varchar(100),
@@ -17,7 +15,7 @@ begin
 		valor int
 	)
 
-	insert into #temp_relatorio_imovel
+	INSERT INTO #temp_relatorio_imovel
 	SELECT 
 	'Relatorio Valor dos imoveis locados',
 	  i.cd_imovel,
@@ -35,20 +33,20 @@ begin
 	ON i.cd_imovel = c.cd_imovel
 	inner join 
 	Pessoa p 
-	on c.cd_locador = p.cd_pessoa
+	ON c.cd_locador = p.cd_pessoa
 	WHERE
 		c.status_contrato = 'A'
 	GROUP BY
 		i.cd_imovel, i.ds_imovel, i.tipo_imovel, i.area_construida, i.area_total, c.cd_imobiliaria, p.cd_pessoa, p.nome;
 
-	select * from #temp_relatorio_imovel
+	SELECT * FROM #temp_relatorio_imovel
 
-	drop table #temp_relatorio_imovel
-end 
-go
+	DROP TABLE #temp_relatorio_imovel
+END 
+GO
 
-exec pc_relatorio_valor_imovel
-go
+EXEC pc_relatorio_valor_imovel
+GO
 
 --Relatório Pagamentos por Locatário
 CREATE OR ALTER PROCEDURE pr_relatorio_pagamento_por_locatario AS
@@ -89,7 +87,7 @@ END
 GO
 
 EXEC pr_relatorio_pagamento_por_locatario
-go
+GO
 
 
 -- Relatorio de Locatarios Inadimplentes
