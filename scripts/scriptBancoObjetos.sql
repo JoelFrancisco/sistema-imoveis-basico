@@ -412,14 +412,14 @@ INSERT INTO [Competencia] ([data_competencia]) VALUES
 
 INSERT INTO [Pagamento] ([cd_competencia], [valor_pa], [data_pagamento], [valor_trasferido], [data_vencimento], [email], [status_pagamento], [cd_contrato]) VALUES
 (1, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
-(2, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
+(2, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
 (3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
 (4, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 4),
-(5, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
+(5, 1800.0, null, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
 (6, 1300.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1300.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'carlos@email.com', 'P', 1),
 (7, 1700.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1700.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'fernanda@email.com', 'P', 2),
-(8, 1900.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1900.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'andreia@email.com', 'P', 3),
-(9, 1400.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1400.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'marcio@email.com', 'P', 4),
+(8, 1900.0, null, 1900.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'andreia@email.com', 'P', 3),
+(9, 1400.0, null, 1400.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'marcio@email.com', 'P', 4),
 (10, 1600.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1600.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'lucas@email.com', 'P', 5);
 
 -------------------------------------------------------------------------------
