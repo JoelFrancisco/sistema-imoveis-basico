@@ -289,6 +289,15 @@ ADD CONSTRAINT FK_CD_IMOBILIARIA FOREIGN KEY ([cd_imobiliaria])
 REFERENCES [Imobiliaria] ([cd_imobiliaria]);
 
 -------------------------------------------------------------------------------
+-- Criação dos index
+
+CREATE INDEX idx_tipo_imovel ON Imovel (tipo_imovel);
+
+CREATE INDEX idx_contrato_pessoa ON Contrato (cd_locador, status_contrato);
+
+CREATE INDEX idx_contrato_cd_imovel ON Contrato (cd_imovel);
+
+-------------------------------------------------------------------------------
 -- Insersão de dados para teste
 
 INSERT INTO [Pais] ([nome_pais]) VALUES
@@ -361,42 +370,6 @@ INSERT INTO [Pagamento] ([cd_competencia], [valor_pa], [data_pagamento], [valor_
 (3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3);
 
 -------------------------------------------------------------------------------
--- Selects ae pra ajudar
-    
---select *
---  from endereco  
---  
---select *
---  from Bairro
---  
---select *
---  from Cidade
---
---select *
---  from estado
---
---select *
---  from pais  
---  
---select *
---  from Dados_bancarios
---  
---select *
---  from Pessoa
---  
---select *
---  from imovel
---
---select *
---  from imobiliaria
---  
---select *
---  from Contrato
---  
---select *
---  from Pagamento;
-
--------------------------------------------------------------------------------
 -- Create procedures 
 
 -- create procedure p_abre_competencia
@@ -417,72 +390,3 @@ BEGIN
 
 END;
 
---------------------------------------------------------------------------------
--- Consultas "Regras de Negócio"
---Criei um indice para cada consulta
-
-
---PRIMEIRA CONSULTA:
-
---QUANTOS IMOVEIS RESIDENCIAS TEM POR CIDADE
-
---indice:
-
-CREATE INDEX idx_tipo_imovel ON Imovel (tipo_imovel);
-
---consulta:
-
-SELECT
-    c.nome_cidade,
-    COUNT(i.cd_imovel) AS total_imoveis_residenciais
-FROM
-    Cidade c
-INNER JOIN
-    Bairro b ON c.cd_cidade = b.cd_cidade
-INNER JOIN
-    Endereco en ON b.cd_bairro = en.cd_bairro
-INNER JOIN
-    Imovel i ON en.cd_endereco = i.cd_endereco
-WHERE
-    i.tipo_imovel = 'Residencial'
-GROUP BY
-    c.nome_cidade;
-
-
---SEGUNDA CONSULTA: 
-
---PESSOAS QUE POSSUEM CONTRATOS ATIVOS E A QUANTIA QUE CADA PESSOA POSSUI
-
---indice:
-
-CREATE INDEX idx_contrato_pessoa ON Contrato (cd_locador, status_contrato);
-
---consulta:
-
-SELECT
-    p.nome,
-    COUNT(c.cd_contrato) AS quantidade_contratos
-FROM
-    Pessoa p
-INNER JOIN
-    Contrato c ON p.cd_pessoa = c.cd_locador OR p.cd_pessoa = c.cd_locatario
-WHERE
-    c.status_contrato = 'A'
-GROUP BY
-    p.nome;
-
-
---TERCEIRA CONSULTA:
-
---MEDIA DOS VALORES DOS CONTRATOS DE LOCAÇÃO POR TIPOS DE IMOVEL
-
---indice:
-
-CREATE INDEX idx_contrato_cd_imovel ON Contrato (cd_imovel);
-
---consulta:
-
-SELECT tipo_imovel, AVG(valor) AS media_valor_contrato
-FROM Contrato c
-INNER JOIN Imovel i ON c.cd_imovel = i.cd_imovel
-GROUP BY tipo_imovel;
