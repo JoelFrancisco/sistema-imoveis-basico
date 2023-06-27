@@ -688,39 +688,52 @@ BEGIN
 END;
 
 -- Relatorio Valor inadimplentes
-CREATE OR ALTER PROC pr_valor_inadimplentes AS
+CREATE  PROC pr_valor_inadimplentes AS
 BEGIN
 	CREATE TABLE #temp_valor_inadimplente (
-		tittle_relatorio varchar(100),
-		cd_locatario varchar(100),
-		cd_contrato varchar(100),
-		locatario varchar(100),
-		valor_pendente int,
-		meses_atrasados int
+		nome_locadora varchar(100),
+		ds_imovel varchar(100),
+		NomeCpfLocatario varchar(100),
+		NomeCpfLocador varchar(100),
+		cd_contrato int,
+		dateIniFim  varchar(100),
+		Parcelas_vencidas int,
+		total_divida numeric
 	)
 
 	INSERT INTO #temp_valor_inadimplente
-	SELECT
-		'Relatório de valor inadimplente',
-		pe.cd_pessoa,
-		c.cd_contrato, 
-		pe.nome, 
-		sum(p.valor_pa),
-		count(*)
-	FROM
-		Pagamento p 
-	INNER JOIN
-		Contrato c ON p.cd_contrato = c.cd_contrato
-	INNER JOIN
-		Pessoa pe ON c.cd_locatario = pe.cd_pessoa
-	INNER JOIN
-		Imovel i ON c.cd_imovel = i.cd_imovel
-	WHERE
-		c.status_contrato = 'A'
-		AND p.data_pagamento IS NULL
-		AND p.data_vencimento < GETDATE()
-	GROUP BY
-		pe.cd_pessoa, pe.nome, c.cd_contrato
+  SELECT
+      MAX(nome_locadora),
+      MAX(ds_imovel),
+      MAX(loca.nome) + ' / ' + MAX(loca.cpf) AS NomeCpfLocatario,
+      MAX(locador.nome) + ' / ' + MAX(locador.cpf) AS NomeCpfLocador,
+      MAX(c.cd_contrato), 
+      MAX(CONVERT(varchar, c.data_inicio , 103)) + ' - ' + MAX(CONVERT(varchar, c.data_fim , 103)) dataIniFim,
+      SUM(CASE 
+              WHEN p.data_vencimento < GETDATE() and p.status_pagamento = 'A' THEN 1 
+              ELSE 0 
+          END) AS Parcelas_vencidas,
+      SUM(CASE 
+              WHEN p.data_vencimento < GETDATE() and p.status_pagamento = 'A' THEN  valor_trasferido
+              ELSE 0 
+          END) AS total_divida
+  FROM
+      Pagamento p 
+  INNER JOIN
+      Contrato c ON p.cd_contrato = c.cd_contrato
+  INNER JOIN
+      Pessoa loca ON c.cd_locatario = loca.cd_pessoa
+  INNER JOIN
+      Pessoa locador ON c.cd_locador = locador.cd_pessoa
+  INNER JOIN
+      Imovel i ON c.cd_imovel = i.cd_imovel
+  INNER JOIN 
+      imobiliaria imo ON imo.cd_imobiliaria = c.cd_imobiliaria
+  WHERE
+      c.status_contrato = 'A'
+      AND p.data_pagamento IS NULL
+      AND p.data_vencimento < GETDATE()
+  GROUP BY c.cd_contrato;
 
 	SELECT * FROM	#temp_valor_inadimplente
 
