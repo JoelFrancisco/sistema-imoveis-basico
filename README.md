@@ -17,7 +17,7 @@ Trabalho da disciplina de Banco de Dados II
 
 Links:
 
-Modelo físico: https://dbdiagram.io/d/647fb5d3722eb7749483ccbc
+Modelo físico: https://dbdiagram.io/d/64922af302bd1c4a5ecd34be
 
 
 Dicionário de dados: https://docs.google.com/spreadsheets/d/1xsuBgEcH26raxDvMKykXwvrgO1BwqrB-gLNMjg5Jg4c/edit?pli=1#gid=1594899475 (caso precise de alguma correção, favor avisar :) )
