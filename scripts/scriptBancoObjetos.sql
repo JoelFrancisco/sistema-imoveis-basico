@@ -554,6 +554,92 @@ INSERT INTO [Pagamento] ([cd_competencia], [valor_pa], [data_pagamento], [valor_
 (5, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 1);
 
 -------------------------------------------------------------------------------
+-- Criação das funções
+
+-- Função de agregaçção de valor dos inadimplentes por imobiliaria
+CREATE OR ALTER FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+AS
+BEGIN
+    DECLARE @ValorInadimplentes INT;
+
+    SELECT @ValorInadimplentes = SUM(p.valor_pa)
+    FROM Contrato c
+    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'A'
+        AND p.data_pagamento IS NULL
+        AND p.data_vencimento < GETDATE()
+        AND c.data_inicio BETWEEN  @dataIni and @dataFim
+
+    RETURN @ValorInadimplentes;
+END;
+
+--Função de cálculo da quantidade de imobiliárias.
+CREATE OR ALTER FUNCTION fn_qnt_imoveis(@cd_imobiliaria int) RETURNS INT
+AS
+BEGIN
+    DECLARE @QuantidadeImoveis INT;
+
+    SELECT @QuantidadeImoveis = COUNT(*)
+    FROM Contrato c
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'A'
+
+    RETURN @QuantidadeImoveis;
+END;
+
+-- Funciont valor total mensal da imobiliaria
+CREATE OR ALTER FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+AS
+BEGIN
+    DECLARE @ValorMensalImobiliaria INT;
+
+    SELECT @ValorMensalImobiliaria = SUM(p.valor_trasferido)
+    FROM Contrato c
+    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+    AND c.data_inicio BETWEEN  @dataIni and @dataFim
+    AND c.status_contrato = 'A' 
+
+    RETURN @ValorMensalImobiliaria;
+END;
+
+-- Quantidade total de locações em aberto por imobiliaria 
+CREATE OR ALTER FUNCTION fn_qnt_imoveis_em_aberto(@cd_imobiliaria int) RETURNS INT
+AS
+BEGIN
+    DECLARE @QuantidadeImoveis INT;
+
+    SELECT @QuantidadeImoveis = COUNT(*)
+    FROM Contrato c
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'P'  -- Pendente, no caso ainda sem locatário
+
+    RETURN @QuantidadeImoveis;
+END;
+
+-- Função total da locação por imobiliaria em aberto
+CREATE OR ALTER  FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+AS
+BEGIN
+    DECLARE @ValorEmAberto INT;
+
+    SELECT @ValorEmAberto = SUM(c.valor)
+    FROM Contrato c
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'P'
+        AND c.data_inicio BETWEEN @dataIni AND @dataFim
+
+
+    RETURN @ValorEmAberto;
+END;
+
+-------------------------------------------------------------------------------
 -- Create procedures 
 
 -- create procedure p_abre_competencia
@@ -738,7 +824,8 @@ BEGIN
       c.status_contrato = 'A'
       AND p.data_pagamento IS NULL
       AND p.data_vencimento < GETDATE()
-  GROUP BY c.cd_contrato;
+  GROUP BY c.cd_contrato
+  
 END;
 
 -- Relatorio do ranking de imobiliarias
@@ -852,90 +939,4 @@ BEGIN
     SELECT * FROM #relatorio_imoveis_regiao
 
     DROP TABLE #relatorio_imoveis_regiao
-END;
-
--------------------------------------------------------------------------------
--- Criação das funções
-
--- Função de agregaçção de valor dos inadimplentes por imobiliaria
-CREATE OR ALTER FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
-AS
-BEGIN
-    DECLARE @ValorInadimplentes INT;
-
-    SELECT @ValorInadimplentes = SUM(p.valor_pa)
-    FROM Contrato c
-    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'A'
-        AND p.data_pagamento IS NULL
-        AND p.data_vencimento < GETDATE()
-        AND c.data_inicio BETWEEN  @dataIni and @dataFim
-
-    RETURN @ValorInadimplentes;
-END;
-
---Função de cálculo da quantidade de imobiliárias.
-CREATE OR ALTER FUNCTION fn_qnt_imoveis(@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @QuantidadeImoveis INT;
-
-    SELECT @QuantidadeImoveis = COUNT(*)
-    FROM Contrato c
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'A'
-
-    RETURN @QuantidadeImoveis;
-END;
-
--- Funciont valor total mensal da imobiliaria
-CREATE OR ALTER FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
-AS
-BEGIN
-    DECLARE @ValorMensalImobiliaria INT;
-
-    SELECT @ValorMensalImobiliaria = SUM(p.valor_trasferido)
-    FROM Contrato c
-    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-    AND c.data_inicio BETWEEN  @dataIni and @dataFim
-    AND c.status_contrato = 'A' 
-
-    RETURN @ValorMensalImobiliaria;
-END;
-
--- Quantidade total de locações em aberto por imobiliaria 
-CREATE OR ALTER FUNCTION fn_qnt_imoveis_em_aberto(@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @QuantidadeImoveis INT;
-
-    SELECT @QuantidadeImoveis = COUNT(*)
-    FROM Contrato c
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'P'  -- Pendente, no caso ainda sem locatário
-
-    RETURN @QuantidadeImoveis;
-END;
-
--- Função total da locação por imobiliaria em aberto
-CREATE OR ALTER  FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
-AS
-BEGIN
-    DECLARE @ValorEmAberto INT;
-
-    SELECT @ValorEmAberto = SUM(c.valor)
-    FROM Contrato c
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'P'
-        AND c.data_inicio BETWEEN @dataIni AND @dataFim
-
-
-    RETURN @ValorEmAberto;
 END;
