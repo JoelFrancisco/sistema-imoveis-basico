@@ -844,7 +844,7 @@ END;
 -- Criação das funções
 
 -- Função de agregaçção de valor dos inadimplentes por imobiliaria
-CREATE   FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+CREATE OR ALTER FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
 AS
 BEGIN
     DECLARE @ValorInadimplentes INT;
@@ -878,7 +878,7 @@ BEGIN
 END;
 
 -- Funciont valor total mensal da imobiliaria
-CREATE   FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+CREATE OR ALTER FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
 AS
 BEGIN
     DECLARE @ValorMensalImobiliaria INT;
@@ -910,7 +910,7 @@ BEGIN
 END;
 
 -- Função total da locação por imobiliaria em aberto
-CREATE   FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+CREATE OR ALTER  FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
 AS
 BEGIN
     DECLARE @ValorEmAberto INT;
