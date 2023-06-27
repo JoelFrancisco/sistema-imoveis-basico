@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class Pessoa(Base):
     __tablename__ = 'Pessoa'
 
@@ -11,6 +12,7 @@ class Pessoa(Base):
     telefone = Column(String(20))
     dt_nascimento = Column(Date)
     cpf = Column(String(14))
+
 
 class Contrato(Base):
     __tablename__ = 'Contrato'
@@ -24,17 +26,19 @@ class Contrato(Base):
     cd_locatario = Column(Integer, ForeignKey('Pessoa.cd_pessoa'))
     cd_imovel = Column(Integer, ForeignKey('Imovel.cd_imovel'))
 
+
 class Pagamento(Base):
     __tablename__ = 'Pagamento'
 
     cd_pagamento = Column(Integer, primary_key=True)
     valor_pa = Column(Numeric(10, 2))
     data_pagamento = Column(Date)
-    valor_trasferido = Column(Numeric(10, 2))
+    valor_transferido = Column(Numeric(10, 2))
     data_vencimento = Column(Date)
     email = Column(String(120))
     status_pagamento = Column(String(1))
     cd_contrato = Column(Integer, ForeignKey('Contrato.cd_contrato'))
+
 
 class Imovel(Base):
     __tablename__ = 'Imovel'
@@ -46,6 +50,7 @@ class Imovel(Base):
     area_total = Column(Numeric(10, 2))
     cd_endereco = Column(Integer, ForeignKey('Endereco.cd_endereco'))
 
+
 class DadosBancarios(Base):
     __tablename__ = 'Dados_bancarios'
 
@@ -55,6 +60,7 @@ class DadosBancarios(Base):
     conta_locatario = Column(Integer)
     cd_pessoa = Column(Integer, ForeignKey('Pessoa.cd_pessoa'))
 
+
 class Imobiliaria(Base):
     __tablename__ = 'imobiliaria'
 
@@ -62,6 +68,7 @@ class Imobiliaria(Base):
     nome_locadora = Column(String(120))
     cnpj = Column(String(14))
     email = Column(String(120))
+
 
 class Endereco(Base):
     __tablename__ = 'Endereco'
@@ -72,12 +79,14 @@ class Endereco(Base):
     cep = Column(String(8))
     cd_bairro = Column(Integer, ForeignKey('Bairro.cd_bairro'))
 
+
 class Bairro(Base):
     __tablename__ = 'Bairro'
 
     cd_bairro = Column(Integer, primary_key=True)
     nome_bairro = Column(String(120))
     cd_cidade = Column(Integer, ForeignKey('Cidade.cd_cidade'))
+
 
 class Cidade(Base):
     __tablename__ = 'Cidade'
@@ -86,6 +95,7 @@ class Cidade(Base):
     nome_cidade = Column(String(120))
     uf = Column(String(2))
 
+
 class Estado(Base):
     __tablename__ = 'Estado'
 
@@ -93,8 +103,22 @@ class Estado(Base):
     nome_estado = Column(String(120))
     cd_pais = Column(Integer, ForeignKey('Pais.cd_pais'))
 
+
 class Pais(Base):
     __tablename__ = 'Pais'
 
     cd_pais = Column(Integer, primary_key=True)
     nome_pais = Column(String(120))
+
+
+class RankingImobiliariasRelatorio(Base):
+    __tablename__ = 'temp_ranking_imobiliarias'
+
+    cd_imobiliaria = Column(String(100), primary_key=True)
+    title = Column(String(100),name="tittle")
+    nome = Column(String(100))
+    Quantidade_Imoveis_Locados = Column(Integer)
+    Quantidade_Total_Locacao = Column(Integer)
+    Quantidade_Imoveis_Em_Aberto = Column(Integer)
+    Valor_Total_Locacao_Em_Aberto = Column(Integer)
+    Valor_Total_Divida = Column(Integer)
