@@ -158,8 +158,37 @@ DROP TABLE [Estado];
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[Pais]') AND type = 'U')
 DROP TABLE [Pais];
 
-------------------------------------------------------------------------------- 	
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[temp_ranking_imobiliarias]') AND type = 'U')
+DROP TABLE [temp_ranking_imobiliarias];
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[temp_valor_inadimplente]') AND type = 'U')
+DROP TABLE [temp_valor_inadimplente];
+
+-------------------------------------------------------------------------------
+
 -- Criação das tabelas
+
+CREATE TABLE [temp_valor_inadimplente] (
+	[nome_locadora] varchar(100),
+	[ds_imovel] varchar(100),
+	[NomeCpfLocatario] varchar(100),
+	[NomeCpfLocador] varchar(100),
+	[cd_contrato] int,
+	[dateIniFim]  varchar(100),
+	[Parcelas_vencidas] int,
+	[total_divida] numeric
+)
+
+CREATE TABLE [temp_ranking_imobiliarias](
+	[tittle] varchar(100),
+	[cd_imobiliaria] varchar(100),
+	[nome] varchar(100),
+	[Quantidade_Imoveis_Locados] int,
+	[Quantidade_Total_Locacao] int,
+	[Quantidade_Imoveis_Em_Aberto] int,
+	[Valor_Total_Locacao_Em_Aberto] int,
+	[Valor_Total_Divida] int
+);
 
 CREATE TABLE [Competencia] (
   [cd_competencia] int IDENTITY PRIMARY KEY,
@@ -350,12 +379,19 @@ INSERT INTO [Bairro] ([nome_bairro], [cd_cidade]) VALUES
 ('Sol', 6);
 
 INSERT INTO [Endereco] ([rua], [numero], [cep], [cd_bairro]) VALUES
-('Rua A', 123, '01234', 1),
-('Main Street', 456, '12345', 2),
-('Yonge Street', 789, '67890', 3),
-('Berlinstraße', 10, '54321', 4),
-('Rue de la Paix', 20, '98765', 5),
-('Calle Mayor', 30, '13579', 6);
+('Rua Itajai', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 1),
+('Main Street', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 2),
+('Yonge Street', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 3),
+('Berlinstraße', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 4),
+('Rue de la Paix', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 5),
+('Rua ipatinga', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 6),
+('Rua Cleber', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 4),
+('Rua Joaquin', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 1),
+('Champs Elysees', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 3),
+('Las Vegas Strip', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 2),
+('La Rambla', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 2),
+('Khao San', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 5),
+('Khao San', CAST((rand() * 1000) as int), CAST((rand() * 10000) as int), 6);
 
 INSERT INTO [Pessoa] ([nome], [telefone], [dt_nascimento], [cpf]) VALUES
 ('João', '1111111111', '1990-01-01', '111.111.111-11'),
@@ -365,12 +401,19 @@ INSERT INTO [Pessoa] ([nome], [telefone], [dt_nascimento], [cpf]) VALUES
 ('Luiz', '5555555555', '1992-05-05', '555.555.555-55');
 
 INSERT INTO [Imovel] ([ds_imovel], [tipo_imovel], [area_construida], [area_total], [cd_endereco]) VALUES
-('Casa na praia', 'Residencial', 150.5, 300.75, 1),
-('Apartamento no centro', 'Residencial', 80.25, 100.5, 2),
-('Escritório comercial', 'Comercial', 200.0, 200.0, 3),
-('Cobertura de luxo', 'Residencial', 300.0, 400.0, 4),
-('Loja no centro', 'Comercial', 150.0, 150.0, 5),
-('Apartamento com vista', 'Residencial', 90.0, 120.0, 6);
+('Casa na praia', 'Residencial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 1),
+('Apartamento no centro', 'Residencial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 2),
+('Escritório comercial', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 3),
+('Cobertura de luxo', 'Residencial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 4),
+('Loja no centro', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 5),
+('Loja no centro', 'Residencial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 4),
+('Apartamento com vista', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 5),
+('Apartamento no centro', 'Residencial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 6),
+('Escritório comercial', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 3),
+('Apartamento com vista', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 2),
+('Escritório comercial', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 2),
+('Cobertura de luxo', 'Residencial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 6),
+('Apartamento com vista', 'Comercial', CAST((rand() * 100) as int), CAST((rand() * 1000) as int), 1);
 
 INSERT INTO [Dados_bancarios] ([banco_locatario], [agencia_locatario], [conta_locatario], [cd_pessoa]) VALUES
 ('Banco A', 1234, 56789, 1),
@@ -387,11 +430,19 @@ INSERT INTO [imobiliaria] ([nome_locadora], [cnpj], [email]) VALUES
 ('Imobiliária B', '78901234567890', 'contato@imobiliariab.com');
 
 INSERT INTO [Contrato] ([valor], [data_inicio], [data_fim], [status_contrato], [cd_locador], [cd_locatario], [cd_imovel], [cd_imobiliaria]) VALUES
-(1500, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 1, 2, 1, 1),
-(2000, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 3, 2, 2, 5),
-(3000, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 2, 1, 3, 2),
-(2500, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 4, 3, 4, 3),
-(1800, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 5, 1, 5, 4);
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 1, 2, 1, 1),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 3, 2, 2, 5),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 2, 1, 3, 2),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 4, 3, 4, 3),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 5, 1, 5, 4),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 1, 2, 1, 1),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 3, 2, 2, 5),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 2, 1, 3, 2),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 4, 3, 4, 3),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 5, 1, 5, 4),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 1, 2, 1, 1),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'P', 3, 2, 2, 5),
+(CAST((rand() * 100000000) as int), DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), DATEADD(MONTH, + CAST((rand() * 10) as int), GETDATE()), 'A', 2, 1, 3, 2);
 
 INSERT INTO [Competencia] ([data_competencia]) VALUES
 (DATEADD(MONTH, - 12, GETDATE())),
@@ -414,28 +465,202 @@ INSERT INTO [Pagamento] ([cd_competencia], [valor_pa], [data_pagamento], [valor_
 (1, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
 (2, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
 (3, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
-(4, 1000.0, null, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
+(4, 1000.0, null, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'A', 1),
 (5, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 1),
 (1, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
-(2, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
+(2, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 2),
 (3, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
 (4, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
-(5, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 2),
+(5, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 2),
 (1, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
-(2, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
+(2, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 3),
 (3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
-(4, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
+(4, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 3),
 (5, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
-(1, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 4),
+(1, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'A', 4),
 (2, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 4),
 (3, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 4),
-(4, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 4),
+(4, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'A', 4),
 (5, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 4),
 (1, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
 (2, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
 (3, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
-(4, 1800.0, null, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
-(5, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5);
+(4, 1800.0, null, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'A', 5),
+(5, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 5),
+(1, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 6),
+(2, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 6),
+(3, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 6),
+(4, 1000.0, null, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'A', 6),
+(5, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 6),
+(1, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 7),
+(2, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 7),
+(3, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 7),
+(4, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 7),
+(5, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 7),
+(1, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 8),
+(2, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 8),
+(3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 8),
+(4, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 8),
+(5, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 8),
+(1, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'A', 9),
+(2, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 9),
+(3, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 9),
+(4, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'A', 9),
+(5, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 9),
+(1, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 10),
+(2, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 10),
+(3, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 10),
+(4, 1800.0, null, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'A', 10),
+(5, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 10),
+(1, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 11),
+(2, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 11),
+(3, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 11),
+(4, 1000.0, null, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'A', 11),
+(5, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 11),
+(1, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 12),
+(2, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 12),
+(3, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 12),
+(4, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 12),
+(5, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 12),
+(1, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 13),
+(2, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 13),
+(3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 13),
+(4, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 13),
+(5, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 13),
+(1, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'A', 1),
+(2, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 2),
+(3, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 3),
+(4, 1200.0, null, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'A', 4),
+(5, 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1200.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'ana@email.com', 'P', 5),
+(1, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 6),
+(2, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 7),
+(3, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 8),
+(4, 1800.0, null, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'A', 9),
+(5, 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1800.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'luiz@email.com', 'P', 10),
+(1, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 11),
+(2, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 12),
+(3, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 13),
+(4, 1000.0, null, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 12),
+(5, 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'joao@email.com', 'P', 11),
+(1, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 10),
+(2, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 9),
+(3, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 8),
+(4, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'P', 7),
+(5, 1500.0, null, 1500.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'maria@email.com', 'A', 6),
+(1, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 5),
+(2, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 4),
+(3, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 3),
+(4, 2000.0, null, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'A', 2),
+(5, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 1);
+
+-------------------------------------------------------------------------------
+-- Criação das triggers
+
+-- Trigger para lançar o primeiro pagamento ao cadastro do contrato
+CREATE OR ALTER TRIGGER TAI_PRIMEIRO_PAGEMENTO ON CONTRATO FOR INSERT AS
+BEGIN	
+	declare @cd_contrato int,
+			@cd_locador INT,
+			@cd_locatario INT,
+			@data_vencimento date,
+			@valor_contrato int;
+	
+	select @cd_contrato = cd_contrato,
+		   @cd_locador = cd_locador,
+		   @cd_locatario = cd_locatario,
+		   @data_vencimento = data_inicio,
+		   @valor_contrato = valor
+	  from inserted
+
+	INSERT INTO [Pagamento] ([valor_pa], [valor_trasferido], [data_vencimento], [status_pagamento], [cd_contrato]) VALUES
+		(@valor_contrato, @valor_contrato/100, DATEADD(MONTH, 1, @data_vencimento), 'A', @cd_contrato);
+END;
+
+-------------------------------------------------------------------------------
+-- Criação das funções
+
+-- Função de agregaçção de valor dos inadimplentes por imobiliaria
+CREATE OR ALTER FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+AS
+BEGIN
+    DECLARE @ValorInadimplentes INT;
+
+    SELECT @ValorInadimplentes = SUM(p.valor_pa)
+    FROM Contrato c
+    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'A'
+        AND p.data_pagamento IS NULL
+        AND p.data_vencimento < GETDATE()
+        AND c.data_inicio BETWEEN  @dataIni and @dataFim
+
+    RETURN @ValorInadimplentes;
+END;
+
+--Função de cálculo da quantidade de imobiliárias.
+CREATE OR ALTER FUNCTION fn_qnt_imoveis(@cd_imobiliaria int) RETURNS INT
+AS
+BEGIN
+    DECLARE @QuantidadeImoveis INT;
+
+    SELECT @QuantidadeImoveis = COUNT(*)
+    FROM Contrato c
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'A'
+
+    RETURN @QuantidadeImoveis;
+END;
+
+-- Funciont valor total mensal da imobiliaria
+CREATE OR ALTER FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+AS
+BEGIN
+    DECLARE @ValorMensalImobiliaria INT;
+
+    SELECT @ValorMensalImobiliaria = SUM(p.valor_trasferido)
+    FROM Contrato c
+    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+    AND c.data_inicio BETWEEN  @dataIni and @dataFim
+    AND c.status_contrato = 'A' 
+
+    RETURN @ValorMensalImobiliaria;
+END;
+
+-- Quantidade total de locações em aberto por imobiliaria 
+CREATE OR ALTER FUNCTION fn_qnt_imoveis_em_aberto(@cd_imobiliaria int) RETURNS INT
+AS
+BEGIN
+    DECLARE @QuantidadeImoveis INT;
+
+    SELECT @QuantidadeImoveis = COUNT(*)
+    FROM Contrato c
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'P'  -- Pendente, no caso ainda sem locatário
+
+    RETURN @QuantidadeImoveis;
+END;
+
+-- Função total da locação por imobiliaria em aberto
+CREATE OR ALTER  FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
+AS
+BEGIN
+    DECLARE @ValorEmAberto INT;
+
+    SELECT @ValorEmAberto = SUM(c.valor)
+    FROM Contrato c
+    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
+    WHERE i.cd_imobiliaria = @cd_imobiliaria 
+        AND c.status_contrato = 'P'
+        AND c.data_inicio BETWEEN @dataIni AND @dataFim
+
+
+    RETURN @ValorEmAberto;
+END;
 
 -------------------------------------------------------------------------------
 -- Create procedures 
@@ -586,75 +811,67 @@ BEGIN
 END;
 
 -- Relatorio Valor inadimplentes
-CREATE OR ALTER PROC pr_valor_inadimplentes AS
+CREATE  PROC pr_valor_inadimplentes AS
 BEGIN
-	CREATE TABLE #temp_valor_inadimplente (
-		tittle_relatorio varchar(100),
-		cd_locatario varchar(100),
-		cd_contrato varchar(100),
-		locatario varchar(100),
-		valor_pendente int,
-		meses_atrasados int
-	)
+  DELETE temp_valor_inadimplente
 
-	INSERT INTO #temp_valor_inadimplente
-	SELECT
-		'Relatório de valor inadimplente',
-		pe.cd_pessoa,
-		c.cd_contrato, 
-		pe.nome, 
-		sum(p.valor_pa),
-		count(*)
-	FROM
-		Pagamento p 
-	INNER JOIN
-		Contrato c ON p.cd_contrato = c.cd_contrato
-	INNER JOIN
-		Pessoa pe ON c.cd_locatario = pe.cd_pessoa
-	INNER JOIN
-		Imovel i ON c.cd_imovel = i.cd_imovel
-	WHERE
-		c.status_contrato = 'A'
-		AND p.data_pagamento IS NULL
-		AND p.data_vencimento < GETDATE()
-	GROUP BY
-		pe.cd_pessoa, pe.nome, c.cd_contrato
-
-	SELECT * FROM	#temp_valor_inadimplente
-
-	DROP TABLE #temp_valor_inadimplente
+	INSERT INTO temp_valor_inadimplente
+  SELECT
+      MAX(nome_locadora),
+      MAX(ds_imovel),
+      MAX(loca.nome) + ' / ' + MAX(loca.cpf) AS NomeCpfLocatario,
+      MAX(locador.nome) + ' / ' + MAX(locador.cpf) AS NomeCpfLocador,
+      MAX(c.cd_contrato), 
+      MAX(CONVERT(varchar, c.data_inicio , 103)) + ' - ' + MAX(CONVERT(varchar, c.data_fim , 103)) dataIniFim,
+      SUM(CASE 
+              WHEN p.data_vencimento < GETDATE() and p.status_pagamento = 'A' THEN 1 
+              ELSE 0 
+          END) AS Parcelas_vencidas,
+      SUM(CASE 
+              WHEN p.data_vencimento < GETDATE() and p.status_pagamento = 'A' THEN  valor_trasferido
+              ELSE 0 
+          END) AS total_divida
+  FROM
+      Pagamento p 
+  INNER JOIN
+      Contrato c ON p.cd_contrato = c.cd_contrato
+  INNER JOIN
+      Pessoa loca ON c.cd_locatario = loca.cd_pessoa
+  INNER JOIN
+      Pessoa locador ON c.cd_locador = locador.cd_pessoa
+  INNER JOIN
+      Imovel i ON c.cd_imovel = i.cd_imovel
+  INNER JOIN 
+      imobiliaria imo ON imo.cd_imobiliaria = c.cd_imobiliaria
+  WHERE
+      c.status_contrato = 'A'
+      AND p.data_pagamento IS NULL
+      AND p.data_vencimento < GETDATE()
+  GROUP BY c.cd_contrato
+  
 END;
 
 -- Relatorio do ranking de imobiliarias
-CREATE OR ALTER PROC pr_ranking_imobiliarias AS
+CREATE   PROC pr_ranking_imobiliarias 
+				@dataIni date,
+    			@dataFim date
+AS
 BEGIN
-	CREATE TABLE #temp_ranking_imobiliarias(
-		tittle varchar(100),
-		cd_imobiliaria varchar(100),
-		nome varchar(100),
-		Quantidade_Imoveis_Locados int,
-		Quantidade_Total_Locacao int,
-		Quantidade_Imoveis_Em_Aberto int,
-		Valor_Total_Locacao_Em_Aberto int,
-		Valor_Total_Divida int
-	)
+	
+	DELETE temp_ranking_imobiliarias 
 
-	INSERT INTO #temp_ranking_imobiliarias 
+	INSERT INTO temp_ranking_imobiliarias 
 	SELECT 
 		'Relatorio Ranking das Imobiliarias',
 		cd_imobiliaria,
 		nome_locadora,
 		dbo.fn_qnt_imoveis(cd_imobiliaria),
-		dbo.fn_valor_total_imobiliaria(cd_imobiliaria) AS Qtd_Total_Locacao,
+		dbo.fn_valor_total_imobiliaria(cd_imobiliaria, @dataIni, @dataFim) AS Qtd_Total_Locacao,
 		dbo.fn_qnt_imoveis_em_aberto(cd_imobiliaria),
-		dbo.fn_valor_total_em_aberto(cd_imobiliaria),
-		dbo.fn_valor_inadimplentes_imobiliaria(cd_imobiliaria)
+		dbo.fn_valor_total_em_aberto(cd_imobiliaria, @dataIni, @dataFim),
+		dbo.fn_valor_inadimplentes_imobiliaria(cd_imobiliaria, @dataIni, @dataFim)
 	FROM 
 		imobiliaria
-
-	SELECT * FROM #temp_ranking_imobiliarias ORDER BY quantidade_total_locacao desc -- Ordenando pela quantidade recebida mensalmente (Maior para menor)
-
-	DROP TABLE #temp_ranking_imobiliarias 
 
 END;
 
@@ -745,86 +962,4 @@ BEGIN
     SELECT * FROM #relatorio_imoveis_regiao
 
     DROP TABLE #relatorio_imoveis_regiao
-END;
-
--------------------------------------------------------------------------------
--- Criação das funções
-
--- Função de agregaçção de valor dos inadimplentes por imobiliaria
-CREATE OR ALTER FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @ValorInadimplentes INT;
-
-    SELECT @ValorInadimplentes = SUM(p.valor_pa)
-    FROM Contrato c
-    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'A'
-        AND p.data_pagamento IS NULL
-        AND p.data_vencimento < GETDATE()
-
-    RETURN @ValorInadimplentes;
-END;
-
---Função de cálculo da quantidade de imobiliárias.
-CREATE OR ALTER FUNCTION fn_qnt_imoveis(@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @QuantidadeImoveis INT;
-
-    SELECT @QuantidadeImoveis = COUNT(*)
-    FROM Contrato c
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'A'
-
-    RETURN @QuantidadeImoveis;
-END;
-
--- Funciont valor total mensal da imobiliaria
-CREATE OR ALTER FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @ValorMensalImobiliaria INT;
-
-    SELECT @ValorMensalImobiliaria = SUM(p.valor_trasferido)
-    FROM Contrato c
-    INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-
-    RETURN @ValorMensalImobiliaria;
-END;
-
--- Quantidade total de locações em aberto por imobiliaria 
-CREATE OR ALTER FUNCTION fn_qnt_imoveis_em_aberto(@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @QuantidadeImoveis INT;
-
-    SELECT @QuantidadeImoveis = COUNT(*)
-    FROM Contrato c
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'P'  -- Pendente, no caso ainda sem locatário
-
-    RETURN @QuantidadeImoveis;
-END;
-
--- Função total da locação por imobiliaria em aberto
-CREATE OR ALTER FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int) RETURNS INT
-AS
-BEGIN
-    DECLARE @ValorEmAberto INT;
-
-    SELECT @ValorEmAberto = SUM(c.valor)
-    FROM Contrato c
-    INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
-    WHERE i.cd_imobiliaria = @cd_imobiliaria 
-        AND c.status_contrato = 'P'
-
-
-    RETURN @ValorEmAberto;
 END;
