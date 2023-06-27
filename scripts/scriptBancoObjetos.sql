@@ -161,9 +161,23 @@ DROP TABLE [Pais];
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[temp_ranking_imobiliarias]') AND type = 'U')
 DROP TABLE [temp_ranking_imobiliarias];
 
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[temp_valor_inadimplente]') AND type = 'U')
+DROP TABLE [temp_valor_inadimplente];
+
 -------------------------------------------------------------------------------
 
 -- Criação das tabelas
+
+CREATE TABLE [temp_valor_inadimplente] (
+	[nome_locadora] varchar(100),
+	[ds_imovel] varchar(100),
+	[NomeCpfLocatario] varchar(100),
+	[NomeCpfLocador] varchar(100),
+	[cd_contrato] int,
+	[dateIniFim]  varchar(100),
+	[Parcelas_vencidas] int,
+	[total_divida] numeric
+)
 
 CREATE TABLE [temp_ranking_imobiliarias](
 	[tittle] varchar(100),
@@ -690,18 +704,9 @@ END;
 -- Relatorio Valor inadimplentes
 CREATE  PROC pr_valor_inadimplentes AS
 BEGIN
-	CREATE TABLE #temp_valor_inadimplente (
-		nome_locadora varchar(100),
-		ds_imovel varchar(100),
-		NomeCpfLocatario varchar(100),
-		NomeCpfLocador varchar(100),
-		cd_contrato int,
-		dateIniFim  varchar(100),
-		Parcelas_vencidas int,
-		total_divida numeric
-	)
+  DELETE temp_valor_inadimplente
 
-	INSERT INTO #temp_valor_inadimplente
+	INSERT INTO temp_valor_inadimplente
   SELECT
       MAX(nome_locadora),
       MAX(ds_imovel),
@@ -734,10 +739,6 @@ BEGIN
       AND p.data_pagamento IS NULL
       AND p.data_vencimento < GETDATE()
   GROUP BY c.cd_contrato;
-
-	SELECT * FROM	#temp_valor_inadimplente
-
-	DROP TABLE #temp_valor_inadimplente
 END;
 
 -- Relatorio do ranking de imobiliarias
