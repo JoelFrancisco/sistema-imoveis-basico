@@ -164,9 +164,26 @@ DROP TABLE [temp_ranking_imobiliarias];
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[temp_valor_inadimplente]') AND type = 'U')
 DROP TABLE [temp_valor_inadimplente];
 
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[LOG_PAGAMENTOS]') AND type = 'U')
+DROP TABLE [LOG_PAGAMENTOS];
+
 -------------------------------------------------------------------------------
 
 -- Criação das tabelas
+
+CREATE TABLE [LOG_PAGAMENTOS] (
+   [user_log] varchar(100),
+   [date_log] date,
+   [cd_pagamneto] int,
+   [cd_competencia] int,
+   [valor_pa] numeric(10,2),
+   [data_pagamento] varchar(100),
+   [valor_trasferido] numeric(10,2),
+   [data_vencimento] date,
+   [email] varchar(120),
+   [status_pagamento] char(1),
+   [cd_contrato] int
+) 
 
 CREATE TABLE [temp_valor_inadimplente] (
 	[nome_locadora] varchar(100),
@@ -574,6 +591,30 @@ BEGIN
 
 	INSERT INTO [Pagamento] ([valor_pa], [valor_trasferido], [data_vencimento], [status_pagamento], [cd_contrato]) VALUES
 		(@valor_contrato, @valor_contrato/100, DATEADD(MONTH, 1, @data_vencimento), 'A', @cd_contrato);
+END;
+
+--trigger para log de pagamentos
+CREATE OR ALTER TRIGGER tg_log_pagamentos ON Pagamento AFTER DELETE AS
+BEGIN
+	IF (rowcount_big() = 0)
+	    return
+
+	INSERT INTO LOG_PAGAMENTOS 
+	select
+		suser_name(),
+		getdate(),
+		cd_pagamento,
+   		cd_competencia,
+   		ISNULL(valor_pa, 0),
+   		ISNULL(CONVERT(varchar(10), data_pagamento, 120), 'Aguardando'),
+   		valor_trasferido,
+   		data_vencimento,
+   		email,
+   		status_pagamento,
+   		cd_contrato
+	from 
+	    deleted
+
 END;
 
 -------------------------------------------------------------------------------
