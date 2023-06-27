@@ -33,7 +33,7 @@ class Pagamento(Base):
     cd_pagamento = Column(Integer, primary_key=True)
     valor_pa = Column(Numeric(10, 2))
     data_pagamento = Column(Date)
-    valor_transferido = Column(Numeric(10, 2))
+    valor_transferido = Column(Numeric(10, 2),name="valor_trasferido")
     data_vencimento = Column(Date)
     email = Column(String(120))
     status_pagamento = Column(String(1))
