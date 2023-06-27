@@ -8,9 +8,107 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  FormControl,
+  FormLabel,
+  Stack,
+  Input,
+  Flex,
+  Text,
+  Button
 } from "@chakra-ui/react";
 
+import { useState } from "react";
+
 export function RentStateTable() {
+  const [dataInicio, setDataInicio] = useState(new Date());
+  const [dataFim, setDataFim] = useState(new Date());
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  async function getData() {
+    try {
+      const API_URL = "http://localhost:8000"
+      const response = await (await fetch(`${API_URL}/relatorios/ranking/imobiliarias?data_inicio=${dataInicio}&data_fim=${dataFim}`)).json();
+      console.log(response)
+      setData(response);
+      setLoading(false);
+    } catch(err) {
+      setError(true);
+    }
+  }
+
+  if (error) {
+    return <>Erro ao buscar dados</>
+  }
+
+  if (data.length === 0) {
+    return (
+        <FormControl
+          as="form"
+          w="fit-content"
+          p="0.75rem"
+          display="flex"
+          flexDirection="column"
+          gap="4"
+          borderRadius="8"
+          borderStyle=""
+          boxShadow="dark-lg"
+        >
+          <Text>Informe os dados do locador:</Text>
+          <Stack
+            as="section"
+            spacing="2.625rem"
+            maxW="52rem"
+            padding="1"
+            display="flex"
+            flexDirection="row"
+            flexWrap="wrap"
+            alignItems="center"
+          >
+            <Flex alignItems="center">
+              <FormLabel textAlign="center">Data início:</FormLabel>
+              <Input
+                id="data_inicio"
+                type="datetime-local"
+                size="md"
+                variant="filled"
+                borderRadius="16"
+                width="12rem"
+                value={dataInicio}
+                onChange={(e) => {
+                  setDataInicio(e.target.value)
+                }}
+              />
+            </Flex>
+            <Flex alignItems="center">
+              <FormLabel>Data Fim:</FormLabel>
+              <Input
+                id="data_fim"
+                type="datetime-local"
+                size="md"
+                variant="filled"
+                borderRadius="16"
+                width="12rem"
+                value={dataFim}
+                onChange={(e) => {
+                  setDataFim(e.target.value)
+                }}
+              />
+            </Flex>
+          </Stack>
+          <Flex alignItems="center" gap="0.625rem">
+            <Button variant="solid" size="md" colorScheme="green" onClick={() => {
+              getData()
+            }}>
+              Enviar
+            </Button>
+          </Flex>
+        </FormControl>
+    )
+  } 
+
   return (
     <>
       <TableContainer>
@@ -37,36 +135,17 @@ export function RentStateTable() {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td padding="1rem" textAlign="center">
-                Imobiliária Prime
-              </Td>
-              <Td textAlign="center">5</Td>
-              <Td textAlign="center">5</Td>
-              <Td textAlign="center">2</Td>
-              <Td textAlign="center">3</Td>
-              <Td textAlign="center">R$ 20.000,00</Td>
-            </Tr>
-            <Tr>
-              <Td padding="1rem" textAlign="center">
-                Nova Era Imobiliária
-              </Td>
-              <Td textAlign="center">5</Td>
-              <Td textAlign="center">5</Td>
-              <Td textAlign="center">2</Td>
-              <Td textAlign="center">1</Td>
-              <Td textAlign="center">R$ 10.000,00</Td>
-            </Tr>
-            <Tr>
-              <Td padding="1rem" textAlign="center">
-                Casa & Lar Imóveis
-              </Td>
-              <Td textAlign="center">5</Td>
-              <Td textAlign="center">5</Td>
-              <Td textAlign="center">2</Td>
-              <Td textAlign="center">1</Td>
-              <Td textAlign="center">R$ 6.000,00</Td>
-            </Tr>
+            {data.map((value) => <Tr>
+                <Td padding="1rem" textAlign="center">
+                  {value.nome}
+                </Td>
+                <Td textAlign="center">{value["Quantidade_Imoveis_locados"]}</Td>
+                <Td textAlign="center">{value["Quantidade_Total_Locacao"]}</Td>
+                <Td textAlign="center">{value["Quantidade_Imoveis_Em_Aberto"]}</Td>
+                <Td textAlign="center">R${value["Valor_Total_Divida"]}</Td>
+                <Td textAlign="center">R${value["Valor_Total_Locacao_Em_Aberto"]}</Td>
+              </Tr>
+            )}
           </Tbody>
           <Tfoot>
             <Tr>
