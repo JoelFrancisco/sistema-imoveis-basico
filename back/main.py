@@ -4,9 +4,11 @@ from router.RouterPessoa import PessoasRoutes
 from router.RouterContrato import ContratosRoutes
 from router.RouterPagamento import PagamentosRoutes
 from router.RouterImovel import ImoveisRoutes
+from router.RouterRelatorio import RelatoriosRoutes
 
 from fastapi.middleware.cors import CORSMiddleware
 
+import uvicorn
 
 app = FastAPI()
 
@@ -26,3 +28,8 @@ app.include_router(ContratosRoutes)
 app.include_router(PagamentosRoutes)
 
 app.include_router(ImoveisRoutes)
+
+app.include_router(RelatoriosRoutes)
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)
