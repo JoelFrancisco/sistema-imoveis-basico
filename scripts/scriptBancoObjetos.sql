@@ -554,6 +554,29 @@ INSERT INTO [Pagamento] ([cd_competencia], [valor_pa], [data_pagamento], [valor_
 (5, 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 2000.0, DATEADD(MONTH, - CAST((rand() * 10) as int), GETDATE()), 'pedro@email.com', 'P', 1);
 
 -------------------------------------------------------------------------------
+-- Criação das triggers
+
+-- Trigger para lançar o primeiro pagamento ao cadastro do contrato
+CREATE OR ALTER TRIGGER TAI_PRIMEIRO_PAGEMENTO ON CONTRATO FOR INSERT AS
+BEGIN	
+	declare @cd_contrato int,
+			@cd_locador INT,
+			@cd_locatario INT,
+			@data_vencimento date,
+			@valor_contrato int;
+	
+	select @cd_contrato = cd_contrato,
+		   @cd_locador = cd_locador,
+		   @cd_locatario = cd_locatario,
+		   @data_vencimento = data_inicio,
+		   @valor_contrato = valor
+	  from inserted
+
+	INSERT INTO [Pagamento] ([valor_pa], [valor_trasferido], [data_vencimento], [status_pagamento], [cd_contrato]) VALUES
+		(@valor_contrato, @valor_contrato/100, DATEADD(MONTH, 1, @data_vencimento), 'A', @cd_contrato);
+END;
+
+-------------------------------------------------------------------------------
 -- Criação das funções
 
 -- Função de agregaçção de valor dos inadimplentes por imobiliaria
