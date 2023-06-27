@@ -158,8 +158,23 @@ DROP TABLE [Estado];
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[Pais]') AND type = 'U')
 DROP TABLE [Pais];
 
-------------------------------------------------------------------------------- 	
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('[temp_ranking_imobiliarias]') AND type = 'U')
+DROP TABLE [temp_ranking_imobiliarias];
+
+-------------------------------------------------------------------------------
+
 -- Criação das tabelas
+
+CREATE TABLE [temp_ranking_imobiliarias](
+	[tittle] varchar(100),
+	[cd_imobiliaria] varchar(100),
+	[nome] varchar(100),
+	[Quantidade_Imoveis_Locados] int,
+	[Quantidade_Total_Locacao] int,
+	[Quantidade_Imoveis_Em_Aberto] int,
+	[Valor_Total_Locacao_Em_Aberto] int,
+	[Valor_Total_Divida] int
+);
 
 CREATE TABLE [Competencia] (
   [cd_competencia] int IDENTITY PRIMARY KEY,
@@ -713,35 +728,26 @@ BEGIN
 END;
 
 -- Relatorio do ranking de imobiliarias
-CREATE OR ALTER PROC pr_ranking_imobiliarias AS
+CREATE   PROC pr_ranking_imobiliarias 
+				@dataIni date,
+    			@dataFim date
+AS
 BEGIN
-	CREATE TABLE #temp_ranking_imobiliarias(
-		tittle varchar(100),
-		cd_imobiliaria varchar(100),
-		nome varchar(100),
-		Quantidade_Imoveis_Locados int,
-		Quantidade_Total_Locacao int,
-		Quantidade_Imoveis_Em_Aberto int,
-		Valor_Total_Locacao_Em_Aberto int,
-		Valor_Total_Divida int
-	)
+	
+	DELETE temp_ranking_imobiliarias 
 
-	INSERT INTO #temp_ranking_imobiliarias 
+	INSERT INTO temp_ranking_imobiliarias 
 	SELECT 
 		'Relatorio Ranking das Imobiliarias',
 		cd_imobiliaria,
 		nome_locadora,
 		dbo.fn_qnt_imoveis(cd_imobiliaria),
-		dbo.fn_valor_total_imobiliaria(cd_imobiliaria) AS Qtd_Total_Locacao,
+		dbo.fn_valor_total_imobiliaria(cd_imobiliaria, @dataIni, @dataFim) AS Qtd_Total_Locacao,
 		dbo.fn_qnt_imoveis_em_aberto(cd_imobiliaria),
-		dbo.fn_valor_total_em_aberto(cd_imobiliaria),
-		dbo.fn_valor_inadimplentes_imobiliaria(cd_imobiliaria)
+		dbo.fn_valor_total_em_aberto(cd_imobiliaria, @dataIni, @dataFim),
+		dbo.fn_valor_inadimplentes_imobiliaria(cd_imobiliaria, @dataIni, @dataFim)
 	FROM 
 		imobiliaria
-
-	SELECT * FROM #temp_ranking_imobiliarias ORDER BY quantidade_total_locacao desc -- Ordenando pela quantidade recebida mensalmente (Maior para menor)
-
-	DROP TABLE #temp_ranking_imobiliarias 
 
 END;
 
@@ -838,7 +844,7 @@ END;
 -- Criação das funções
 
 -- Função de agregaçção de valor dos inadimplentes por imobiliaria
-CREATE OR ALTER FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int) RETURNS INT
+CREATE   FUNCTION fn_valor_inadimplentes_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
 AS
 BEGIN
     DECLARE @ValorInadimplentes INT;
@@ -851,6 +857,7 @@ BEGIN
         AND c.status_contrato = 'A'
         AND p.data_pagamento IS NULL
         AND p.data_vencimento < GETDATE()
+        AND c.data_inicio BETWEEN  @dataIni and @dataFim
 
     RETURN @ValorInadimplentes;
 END;
@@ -871,7 +878,7 @@ BEGIN
 END;
 
 -- Funciont valor total mensal da imobiliaria
-CREATE OR ALTER FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int) RETURNS INT
+CREATE   FUNCTION fn_valor_total_imobiliaria(@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
 AS
 BEGIN
     DECLARE @ValorMensalImobiliaria INT;
@@ -881,6 +888,8 @@ BEGIN
     INNER JOIN Pagamento p ON c.cd_contrato = p.cd_contrato
     INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
     WHERE i.cd_imobiliaria = @cd_imobiliaria 
+    AND c.data_inicio BETWEEN  @dataIni and @dataFim
+    AND c.status_contrato = 'A' 
 
     RETURN @ValorMensalImobiliaria;
 END;
@@ -901,7 +910,7 @@ BEGIN
 END;
 
 -- Função total da locação por imobiliaria em aberto
-CREATE OR ALTER FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int) RETURNS INT
+CREATE   FUNCTION fn_valor_total_em_aberto (@cd_imobiliaria int, @dataIni date, @dataFim date) RETURNS INT
 AS
 BEGIN
     DECLARE @ValorEmAberto INT;
@@ -911,6 +920,7 @@ BEGIN
     INNER JOIN imobiliaria i ON c.cd_imobiliaria = i.cd_imobiliaria
     WHERE i.cd_imobiliaria = @cd_imobiliaria 
         AND c.status_contrato = 'P'
+        AND c.data_inicio BETWEEN @dataIni AND @dataFim
 
 
     RETURN @ValorEmAberto;
